@@ -88,9 +88,9 @@ requirements:
 baseCommand: ["/bin/bash", "-c"]
 arguments:
   - position: 0
-    shellQuote: true
+    shellQuote: false
     valueFrom: >-
-      set -eo pipefail
+      'set -eo pipefail
 
       ${
         var plugins = ["LoF","gnomADc"];
@@ -105,19 +105,19 @@ arguments:
         }
         return "perl /opt/vep/src/ensembl-vep/INSTALL.pl --NO_TEST --NO_UPDATE --AUTO p --PLUGINS "+plugins.join(',')+" &&"
       }
-      ${if(inputs.cache) {return "tar -xzf "+inputs.cache.path} else {return "echo 'No cache'"}} &&
+      ${if(inputs.cache) {return "tar -xzf "+inputs.cache.path} else {return '>&2 echo "Warning: No cache provided. Some options may be incompatible"'}} &&
       perl /opt/vep/src/ensembl-vep/vep
   - position: 2
-    shellQuote: true
+    shellQuote: false
     valueFrom: >-
       --warning_file $(inputs.output_basename)_warnings.$(inputs.tool_name).txt
       ${
         if (inputs.run_stats){
-          var arg = " --stats_file " + inputs.output_basename + "_stats." + inputs.tool_name + ".html ";
+          var arg = "--stats_file " + inputs.output_basename + "_stats." + inputs.tool_name + ".html";
           return arg;
         }
         else{
-          return " --no_stats ";
+          return "--no_stats";
         }
       }
       ${if(inputs.reference) {return "--hgvs --hgvsg --fasta " + inputs.reference.path} else {return ""}}
@@ -128,10 +128,10 @@ arguments:
       ${if(inputs.dbscsnv) {return "--plugin dbscSNV,"+inputs.dbscsnv.path} else {return ""}}
       ${if(inputs.intervar) {return "--custom "+inputs.intervar.path+",Intervar,vcf,exact,0,STATUS"} else {return ""}}
   - position: 3
-    shellQuote: true
+    shellQuote: false
     valueFrom: >-
       | bgzip -c -@ ${ return inputs.cores >= 8 ? 4 : 1; } > $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz &&
-      tabix $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz
+      tabix $(inputs.output_basename).$(inputs.tool_name).vep.vcf.gz'
 
 inputs:
   input_vcf: { type: File, secondaryFiles: [.tbi], doc: "VCF file (with associated index) to be annotated",
@@ -211,8 +211,8 @@ inputs:
     inputBinding: {position: 2, prefix: "--verbose" } }
   run_cache_existing: { type: 'boolean?', doc: "Checks for the existence of known variants that are co-located with your input. By default the alleles are compared and variants on an allele-specific basis - to compare only coordinates, use --no_check_alleles. ", default: true, 
     inputBinding: {position: 2, prefix: "--check_existing" } }
-  run_cache_af: { type: boolean, doc: "Run the allele frequency flags for cache" }
-  run_stats: { type: boolean, doc: "Create stats file? Disable for speed", default: false }
+  run_cache_af: { type: 'boolean?', doc: "Run the allele frequency flags for cache", default: true }
+  run_stats: { type: 'boolean?', doc: "Create stats file? Disable for speed", default: false }
   cadd_indels: { type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file and index containing CADD indel annotations" }
   cadd_snvs: { type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file and index containing CADD SNV annotations" }
   dbnsfp: { type: 'File?', secondaryFiles: [.tbi,^.readme.txt], doc: "VEP-formatted plugin file, index, and readme file containing dbNSFP annotations" }
