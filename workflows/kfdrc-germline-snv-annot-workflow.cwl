@@ -388,6 +388,6 @@ sbg:license: Apache License 2.0
 sbg:publisher: KFDRC
 
 "sbg:links":
-- id: 'https://github.com/kids-first/kf-germline-workflow/releases/tag/v1.0.0'
+- id: 'https://github.com/kids-first/kids-first/kf-annotation-tools/releases/tag/v1.0.0'
   label: github-release
 
