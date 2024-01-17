@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
 id: gatk_variantfilter_vcf
 doc: "Simple tool add a FILTER tag based on criteria"

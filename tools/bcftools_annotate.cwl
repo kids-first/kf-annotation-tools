@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
 id: bcftools_annotate_vcf
 doc: "Simple tool to annotate a vcf using bcftools and an annotation vcf"

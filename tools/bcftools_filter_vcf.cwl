@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
 id: bcftools_filter_vcf
 doc: "More generic tool to take in an include expression and optionally an exclude expresssion to filter a vcf"

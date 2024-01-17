@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
 id: normalize_vcf
 doc: "Before consensus calling, left align indel calls, break up multi-allelic calls, but leave mnps intact"

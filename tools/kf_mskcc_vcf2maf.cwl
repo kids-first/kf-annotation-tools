@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
 id: kf-mskcc-vcf2maf-1.6.21
 requirements:

@@ -1,4 +1,4 @@
-cwlVersion: v1.0
+cwlVersion: v1.2
 class: CommandLineTool
 id: generic_rename_outputs
 doc: "Simple tool to rename inputs"
