@@ -1,0 +1,139 @@
+name: Release Submodules Updater
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-submodules:
+    runs-on: ubuntu-latest
+    steps:
+    - id: checkout-annot
+      name: Checkout Annotation Repo
+      uses: actions/checkout@v4
+      with:
+        path: annotation
+        submodules: true
+    - id: checkout-somatic
+      name: Checkout Somatic Repo
+      uses: actions/checkout@v4
+      with:
+        repository: kids-first/kf-somatic-workflow
+        path: somatic
+        submodules: true
+    - id: checkout-tumor-only
+      name: Checkout Tumor Only Repo
+      uses: actions/checkout@v4
+      with:
+        repository: kf-tumor-workflow
+        path: tumor-only
+        submodules: true
+    - id: checkout-germline
+      name: Checkout Germline Repo
+      uses: actions/checkout@v4
+      with:
+        repository: kids-first/kf-germline-workflow
+        path: germline
+        submodules: true
+    - id: checkout-jg
+      name: Checkout Joint Genotyping Repo
+      uses: actions/checkout@v4
+      with:
+        repository: kids-first/kf-jointgenotyping-workflow
+        path: joint-genotyping
+    - id: get-germline-annot-version
+      name: Get Germline Annotation Workflow Version
+      run: |
+        GVERSION=$(yq '."sbg:links" | .[] | select(.label == "github-release") | .id | split("/") | .[-1]' ./annotation/workflows/kfdrc-germline-snv-annot-workflow.cwl)
+        echo "GERMLINE_VERSION=$GVERSION" >> "$GITHUB_ENV"
+    - id: get-somatic-annot-version
+      name: Get Somatic Annotation Workflow Version
+      run: |
+        SVERSION=$(yq '."sbg:links" | .[] | select(.label == "github-release") | .id | split("/") | .[-1]' ./annotation/workflows/kfdrc-somatic-snv-annot-workflow.cwl)
+        echo "SOMATIC_VERSION=$SVERSION" >> "$GITHUB_ENV"
+    - id: update-germline-submodules
+      if: ${{ env.GERMLINE_VERSION == github.ref_name }}
+      run: |
+        cd germline
+        git submodule update --remote --recursive kf-annotation-tools
+        cd kf-annotation-tools
+        git checkout github.ref_name
+        cd ../../joint-genotyping
+        git submodule update --remote --recursive kf-annotation-tools
+        cd kf-annotation-tools
+        git checkout github.ref_name
+    - id: update-somatic-submodules
+      if: ${{ env.SOMATIC_VERSION == github.ref_name }}
+      run: |
+        cd somatic
+        git submodule update --remote --recursive kf-annotation-tools
+        cd kf-annotation-tools
+        git checkout github.ref_name
+        cd ../../tumor-only
+        git submodule update --remote --recursive kf-annotation-tools
+        cd kf-annotation-tools
+        git checkout github.ref_name
+    - id: cpr-germline
+      if: ${{ env.GERMLINE_VERSION == github.ref_name }}
+      name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        path: ./germline
+        commit-message: ":robot: update annotation submodule"
+        title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
+        body: |
+          Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action.
+
+          Updates the annotation submodule in this repository for release ${{ github.ref_name }}
+        delete-branch: true
+        branch: annotation-submodule-to-${{ github.ref_name }}
+        labels: bix-dev
+    - id: cpr-joint-genotyping
+      if: ${{ env.GERMLINE_VERSION == github.ref_name }}
+      name: Joint Genotyping PR
+      uses: peter-evans/create-pull-request@v5
+      with:
+        path: ./joint-genotyping
+        commit-message: ":robot: update annotation submodule"
+        title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
+        body: |
+          Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action.
+
+          Updates the annotation submodule in this repository for release ${{ github.ref_name }}
+        delete-branch: true
+        branch: annotation-submodule-to-${{ github.ref_name }}
+        labels: bix-dev
+    - id: cpr-somatic
+      if: ${{ env.SOMATIC_VERSION == github.ref_name }}
+      name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        path: ./somatic
+        commit-message: ":robot: update annotation submodule"
+        title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
+        body: |
+          Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action.
+
+          Updates the annotation submodule in this repository for release ${{ github.ref_name }}
+        delete-branch: true
+        branch: annotation-submodule-to-${{ github.ref_name }}
+        labels: bix-dev
+    - id: cpr-tumor-only
+      if: ${{ env.GERMLINE_VERSION == github.ref_name }}
+      name: Tumor Only PR
+      uses: peter-evans/create-pull-request@v5
+      with:
+        path: ./tumor-only
+        commit-message: ":robot: update annotation submodule"
+        title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
+        body: |
+          Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action.
+
+          Updates the annotation submodule in this repository for release ${{ github.ref_name }}
+        delete-branch: true
+        branch: annotation-submodule-to-${{ github.ref_name }}
+        labels: bix-dev
