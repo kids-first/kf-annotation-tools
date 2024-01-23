@@ -23,7 +23,7 @@ def create_mod_vcf(output_path, input_path, threads):
 
     input_vcf = pysam.VariantFile(input_path, 'r', threads=threads)
 
-    input_vcf.header.info.add('GNOMAD_FILTER', '1', 'String',
+    input_vcf.header.info.add('GNOMAD_FILTER', '.', 'String',
             'Value of FILTER for gnomAD variant. Use to include/exclude non-PASS variants')
     input_vcf.header.info.add('AF_non_cancer_popmax', 'A', 'Float',
             ('Max AF of non-bottleneck populations in AF_non_cancer'))
@@ -36,15 +36,27 @@ def create_mod_vcf(output_path, input_path, threads):
     # bottleneck population fields
     pop_fields_bn = ['AF_non_cancer_ami', 'AF_non_cancer_asj', 'AF_non_cancer_fin', 'AF_non_cancer_mid', 'AF_non_cancer_oth']
     for record in input_vcf.fetch():
-        if 'AF_non_cancer' in record.info:
-            pop_values = []
-            pop_values_bn = []
-            for pop in pop_fields:
-                pop_values.append(record.info[pop])
-            record.info['AF_non_cancer_popmax'] = max(pop_values)[0]
-            for pop in pop_fields_bn:
-                pop_values_bn.append(record.info[pop])
-            record.info['AF_non_cancer_all_popmax'] = max(max(pop_values)[0], max(pop_values_bn)[0])
+        try:
+            record.info['GNOMAD_FILTER'] = record.filter.keys()
+            if 'AF_non_cancer' in record.info:
+                pop_values = []
+                pop_values_bn = []
+                pop_values = [record.info[pop] for pop in pop_fields if pop in record.info]
+                # get non bottleneck pop max
+                if len(pop_values) > 0:
+                    record.info['AF_non_cancer_popmax'] = max(pop_values)
+                # get pop max with bottleneck, just compare to non
+                pop_values_bn = [record.info[pop] for pop in pop_fields_bn if pop in record.info]
+                if len(pop_values_bn) > 0:
+                    if len(pop_values) > 0:
+                        record.info['AF_non_cancer_all_popmax'] = max(max(pop_values), max(pop_values_bn))
+                    else:
+                        record.info['AF_non_cancer_all_popmax'] = max(pop_values_bn)
+            output.write(record)
+        except Exception as e:
+            print(e)
+            print("Failed at {} {}".format(record.contig, record.pos))
+            exit(1)
 
 
 if __name__ == '__main__':
@@ -61,10 +73,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # Get output VCF location
-    base_dir = os.getcwd()
     output_vcf_name = args.output_basename + ".INFO_added.vcf.gz"
 
     # Create and index the modified VCF
-    create_mod_vcf(output_vcf_path, args.input_vcf, args.threads)
-    pysam.tabix_index(output_vcf_path, preset="vcf", force=True, threads=args.threads) 
+    create_mod_vcf(output_vcf_name, args.input_vcf, int(args.threads))
+    pysam.tabix_index(output_vcf_name, preset="vcf", force=True)
