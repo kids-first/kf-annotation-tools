@@ -3,7 +3,6 @@ Add custom INFO fields to vcf using pysam
 """
 import pysam
 import argparse
-import os
 
 
 def create_mod_vcf(output_path, input_path, threads):
