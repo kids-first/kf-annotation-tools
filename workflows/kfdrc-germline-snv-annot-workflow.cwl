@@ -341,12 +341,19 @@ steps:
     in:
       input_files:
         source: [bcftools_clinvar_annotate/bcftools_annotated_vcf, echtvar_anno/annotated_vcf, vep_annotate_vcf/output_vcf]
-        valueFrom: "${ for(var i = 0; i < self.length; i++){ if (self[i] != null){ return [self[i],self[i].secondaryFiles[0]]; } }
+       valueFrom: |
+         ${
+           var first_non_null = self.filter(function(e) { return e != null }).shift();
+           return [first_non_null, first_non_null.secondaryFiles[0]];
+         }
           }"
       rename_to:
         source: [output_basename, tool_name]
-        valueFrom: "${var pro_vcf=self[0] + '.' + self[1] + '.vcf.gz'; var pro_tbi=self[0] + '.' + self[1] + '.vcf.gz.tbi'; return
-          [pro_vcf, pro_tbi];}"
+        valueFrom: |
+          ${
+            var pro_vcf = '.'.join([self[0], self[1], 'vcf.gz']);
+            return [pro_vcf, pro_vcf + '.tbi'];
+          }
     out: [renamed_files]
 
 $namespaces:
