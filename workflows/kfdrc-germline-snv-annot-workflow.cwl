@@ -326,7 +326,7 @@ steps:
     run: ../tools/bcftools_annotate.cwl
     in:
       input_vcf:
-        source: [echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf,
+        source: [echtvar_anno/annotated_vcf, vep_annotate_vcf/output_vcf, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf,
           prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       annotation_vcf: clinvar_annotation_vcf
@@ -340,7 +340,7 @@ steps:
     label: Rename Outputs
     in:
       input_files:
-        source: [bcftools_clinvar_annotate/bcftools_annotated_vcf, echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf]
+        source: [bcftools_clinvar_annotate/bcftools_annotated_vcf, echtvar_anno/annotated_vcf, vep_annotate_vcf/output_vcf]
         valueFrom: "${ for(var i = 0; i < self.length; i++){ if (self[i] != null){ return [self[i],self[i].secondaryFiles[0]]; } }
           }"
       rename_to:
