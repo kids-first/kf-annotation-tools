@@ -69,7 +69,7 @@ cat chr_list.txt | xargs -IFN -P 8 python3 custom_vcf_info.py --input_vcf gnomad
 ```
 ## Create echtvar reference
 Used docker image `pgc-images.sbgenomics.com/d3b-bixu/echtvar:0.1.9`
-First, create a config json file. See [here](https://github.com/brentp/echtvar#configuration-file-for-encode) for generic details. [This config](gnomad_update.json) was used. This config will prepend `gnomad_3_1_1_` to all field names for source clarity upon annotation.
+First, create a config JSON file. See [here](https://github.com/brentp/echtvar#configuration-file-for-encode) for generic details. [This config](gnomad_update.json) was used. This config will prepend `gnomad_3_1_1_` to all field names for source clarity upon annotation.
 ```sh
 echtvar \
    encode \

@@ -181,16 +181,16 @@ doc: |-
    - `run_stats` boolean: Create stats file. Disable for speed, default: `false`
 
   ### Optional
-   - `bcftools_prefilter_csv`: csv of bcftools filter params if you want to prefilter before annotation
+   - `bcftools_prefilter_csv`: CSV of bcftools filter params if you want to prefilter before annotation
    - `disable_normalization` boolean: Skip normalizing if input is already normed, default is `false`
-   - `bcftools_strip_columns`: csv string of columns to strip if needed to avoid conflict, i.e INFO/AF
+   - `bcftools_strip_columns`: CSV string of columns to strip if needed to avoid conflict, i.e INFO/AF
    - `vep_ram` int: In GB, may need to increase this value depending on the size/complexity of input, default: `48`
    - `vep_cores` int: Number of cores to use. May need to increase for really large inputs, default: `32`,
    - `vep_buffer_size` int: Increase or decrease to balance speed and memory usage, default: `100000`
-   - `bcftools_annot_clinvar_columns`: csv string of columns from annotation to port into the input vcf, default: `INFO/ALLELEID,INFO/CLNDN,INFO/CLNDNINCL,INFO/CLNDISDB,INFO/CLNDISDBINCL,INFO/CLNHGVS,INFO/CLNREVSTAT,INFO/CLNSIG,INFO/CLNSIGCONF,INFO/CLNSIGINCL,INFO/CLNVC,INFO/CLNVCSO,INFO/CLNVI`
+   - `bcftools_annot_clinvar_columns`: CSV string of columns from annotation to port into the input VCF, default: `INFO/ALLELEID,INFO/CLNDN,INFO/CLNDNINCL,INFO/CLNDISDB,INFO/CLNDISDBINCL,INFO/CLNHGVS,INFO/CLNREVSTAT,INFO/CLNSIG,INFO/CLNSIGCONF,INFO/CLNSIGINCL,INFO/CLNVC,INFO/CLNVCSO,INFO/CLNVI`
    - `clinvar_annotation_vcf` files: clinvar_20220507_chr_fixed.vcf.gz, clinvar_20220507_chr_fixed.vcf.gz.tbi
    - `dbnsfp` file: dbNSFP4.3a_grch38.gz, dbNSFP4.3a_grch38.gz.tbi, dbNSFP4.3a_grch38.readme.txt
-   - `dbnsfp_fields` string: csv string with desired fields to annotate. Use ALL to grab all, default: `SIFT4G_pred,Polyphen2_HDIV_pred,Polyphen2_HVAR_pred,LRT_pred,MutationTaster_pred,MutationAssessor_pred,FATHMM_pred,PROVEAN_pred,VEST4_score,VEST4_rankscore,MetaSVM_pred,MetaLR_pred,MetaRNN_pred,M-CAP_pred,REVEL_score,REVEL_rankscore,PrimateAI_pred,DEOGEN2_pred,BayesDel_noAF_pred,ClinPred_pred,LIST-S2_pred,Aloft_pred,fathmm-MKL_coding_pred,fathmm-XF_coding_pred,Eigen-phred_coding,Eigen-PC-phred_coding,phyloP100way_vertebrate,phyloP100way_vertebrate_rankscore,phastCons100way_vertebrate,phastCons100way_vertebrate_rankscore,TWINSUK_AC,TWINSUK_AF,ALSPAC_AC,ALSPAC_AF,UK10K_AC,UK10K_AF,gnomAD_exomes_controls_AC,gnomAD_exomes_controls_AN,gnomAD_exomes_controls_AF,gnomAD_exomes_controls_nhomalt,gnomAD_exomes_controls_POPMAX_AC,gnomAD_exomes_controls_POPMAX_AN,gnomAD_exomes_controls_POPMAX_AF,gnomAD_exomes_controls_POPMAX_nhomalt,Interpro_domain,GTEx_V8_gene,GTEx_V8_tissue`
+   - `dbnsfp_fields` string: CSV string with desired fields to annotate. Use ALL to grab all, default: `SIFT4G_pred,Polyphen2_HDIV_pred,Polyphen2_HVAR_pred,LRT_pred,MutationTaster_pred,MutationAssessor_pred,FATHMM_pred,PROVEAN_pred,VEST4_score,VEST4_rankscore,MetaSVM_pred,MetaLR_pred,MetaRNN_pred,M-CAP_pred,REVEL_score,REVEL_rankscore,PrimateAI_pred,DEOGEN2_pred,BayesDel_noAF_pred,ClinPred_pred,LIST-S2_pred,Aloft_pred,fathmm-MKL_coding_pred,fathmm-XF_coding_pred,Eigen-phred_coding,Eigen-PC-phred_coding,phyloP100way_vertebrate,phyloP100way_vertebrate_rankscore,phastCons100way_vertebrate,phastCons100way_vertebrate_rankscore,TWINSUK_AC,TWINSUK_AF,ALSPAC_AC,ALSPAC_AF,UK10K_AC,UK10K_AF,gnomAD_exomes_controls_AC,gnomAD_exomes_controls_AN,gnomAD_exomes_controls_AF,gnomAD_exomes_controls_nhomalt,gnomAD_exomes_controls_POPMAX_AC,gnomAD_exomes_controls_POPMAX_AN,gnomAD_exomes_controls_POPMAX_AF,gnomAD_exomes_controls_POPMAX_nhomalt,Interpro_domain,GTEx_V8_gene,GTEx_V8_tissue`
    - `cadd_indels` file: CADDv1.6-38-gnomad.genomes.r3.0.indel.tsv.gz, CADDv1.6-38-gnomad.genomes.r3.0.indel.tsv.gz.tbi
    - `cadd_snvs` file: CADDv1.6-38-whole_genome_SNVs.tsv.gz, CADDv1.6-38-whole_genome_SNVs.tsv.gz.tbi
    - `intervar` file: Exons.all.hg38.intervar.2021-07-31.vcf.gz, Exons.all.hg38.intervar.2021-07-31.vcf.gz.tbi
