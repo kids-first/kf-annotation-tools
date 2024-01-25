@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Add custom INFO fields to vcf using pysam
 """
@@ -6,18 +7,16 @@ import argparse
 
 
 def create_mod_vcf(output_path, input_path, threads):
-    """ Create a new VCF in which standard FORMAT fields have been
-            calculated and added=based on those provided natively by Strelka2
+    """ Create a new VCF in which new INFO fields have been
+            calculated and added=based on those provided natively by gnomAD
 
         Args:
             output_path (str): path to the VCF being created
-            input_path (str): path to the Strelka2 VCF
-            tumor_name (str): name of tumor sample in input
-            normal_name (str) name of normal sample in input
+            input_path (str): path to the gnomAD VCF
+            threads: num threads to use for read/write
 
         Raises:
-            IOError if a sample name in the input is neither tumor_name
-                nor normal_name
+            The reported error and what contig and position it happened at
     """
 
     input_vcf = pysam.VariantFile(input_path, 'r', threads=threads)
@@ -58,13 +57,12 @@ def create_mod_vcf(output_path, input_path, threads):
             exit(1)
 
 
-if __name__ == '__main__':
-    
+def main():
     parser = argparse.ArgumentParser(
             description = 'Add custom fields to gnomAD vcf. Limited scope')
 
     parser.add_argument('--input_vcf', 
-            help='VCF to add INFO to')
+            help='gnomAD VCF to add INFO to')
     parser.add_argument('--output_basename',
             help='String to use as basename for output file [e.g.] task ID')
     parser.add_argument('--threads',
@@ -77,3 +75,7 @@ if __name__ == '__main__':
     # Create and index the modified VCF
     create_mod_vcf(output_vcf_name, args.input_vcf, int(args.threads))
     pysam.tabix_index(output_vcf_name, preset="vcf", force=True)
+
+
+if __name__ == '__main__':
+    main()

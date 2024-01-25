@@ -1,5 +1,5 @@
 # Custom gnomAD Reference Creation
-This documentation outlines how we created our gomAD annotation reference.
+This documentation outlines how we created our gnomAD annotation reference.
 While the gnomAD source itself is very large and comprehensive, this reference is meant to add the "bare minimum" as a useful start for variant filtering out-of-the-box with a called VCF.
 The main steps for reference creation are:
 1. Download and pipe to bcftools and vt to grab desired fields and to normalize calls (see https://genome.sph.umich.edu/wiki/Vt#Normalization)
@@ -63,13 +63,13 @@ Use `scripts/custom_vcf_info.py` to add new custom fields, calculated as follows
    ```
    and set to the greater of calculated `AF_non_cancer_popmax` or max of bottleneck populations.
 Example command:
-Installed python package `pysam==0.22.0`, used teh same chr list and ran:
+Installed python package `pysam==0.22.0`, used the same chr list and ran:
 ```sh
 cat chr_list.txt | xargs -IFN -P 8 python3 custom_vcf_info.py --input_vcf gnomad.genomes.v3.1.1.sites.FN.bcftools_INFO_subset.vt_norm.vcf.gz --output_basename gnomad.genomes.v3.1.1.sites.FN.custom --threads 2
 ```
 ## Create echtvar reference
 Used docker image `pgc-images.sbgenomics.com/d3b-bixu/echtvar:0.1.9`
-First, create a config json file. See [here](https://github.com/brentp/echtvar#configuration-file-for-encode) for generic details. See [docs/gnomad_update.json] for config used. This config will preppend `gnomad_3_1_1_` to all field names for source clarity upon annotation.
+First, create a config json file. See [here](https://github.com/brentp/echtvar#configuration-file-for-encode) for generic details. [This config](gnomad_update.json) was used. This config will prepend `gnomad_3_1_1_` to all field names for source clarity upon annotation.
 ```sh
 echtvar \
    encode \
