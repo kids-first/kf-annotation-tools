@@ -318,7 +318,7 @@ steps:
       output_filename:
         source: [output_basename, tool_name]
         valueFrom: |
-          $(self[0]).$(self[1]).bcf_annotated.vcf.gz
+          $(self[0]).$(self[1]).echtvar_annotated.vcf.gz
     out: [annotated_vcf]
 
   bcftools_clinvar_annotate:
@@ -341,17 +341,14 @@ steps:
     in:
       input_files:
         source: [bcftools_clinvar_annotate/bcftools_annotated_vcf, echtvar_anno/annotated_vcf, vep_annotate_vcf/output_vcf]
-       valueFrom: |
-         ${
-           var first_non_null = self.filter(function(e) { return e != null }).shift();
-           return [first_non_null, first_non_null.secondaryFiles[0]];
-         }
-          }"
+        valueFrom: |
+          ${ var first_non_null = self.filter(function(e) { return e != null }).shift();
+            return [first_non_null, first_non_null.secondaryFiles[0]];
+          }
       rename_to:
         source: [output_basename, tool_name]
         valueFrom: |
-          ${
-            var pro_vcf = '.'.join([self[0], self[1], 'vcf.gz']);
+          ${ var pro_vcf = [self[0], self[1], 'vcf.gz'].join('.');
             return [pro_vcf, pro_vcf + '.tbi'];
           }
     out: [renamed_files]
@@ -363,6 +360,6 @@ sbg:license: Apache License 2.0
 sbg:publisher: KFDRC
 
 "sbg:links":
-- id: 'https://github.com/kids-first/kids-first/kf-annotation-tools/releases/tag/v1.0.0'
+- id: 'https://github.com/kids-first/kids-first/kf-annotation-tools/releases/tag/v1.0.1'
   label: github-release
 

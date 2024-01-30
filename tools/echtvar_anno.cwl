@@ -6,7 +6,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ShellCommandRequirement
   - class: DockerRequirement
-    dockerPull: "pgc-images.sbgenomics.com/d3b-bixu/echtvar:0.1.9"
+    dockerPull: "pgc-images.sbgenomics.com/brownm28/echtvar:v0.2.0-rc"
   - class: ResourceRequirement
     coresMin: $(inputs.cpu)
     ramMin: $(inputs.ram * 1000)
@@ -22,7 +22,7 @@ arguments:
     prefix: "&&"
     shellQuote: false
     valueFrom: >-
-      bcftools index
+      bcftools index --threads $(inputs.cpu)
   - position: 19
     shellQuote: false
     valueFrom: >-
