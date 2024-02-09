@@ -24,14 +24,6 @@ arguments:
       && perl vcf2maf.pl
       --input-vcf input_file.vcf
       --output-maf $(inputs.output_basename).$(inputs.tool_name).vep.maf
-      ${
-        if(inputs.maf_center){
-          return "--maf-center \"" + inputs.maf_center + "\""
-        }
-        else{
-          return "";
-        }
-      }
 
 inputs:
   reference: { type: 'File',  secondaryFiles: [.fai], doc: "Fasta genome assembly with index",
@@ -51,7 +43,8 @@ inputs:
     inputBinding: {position: 6, prefix: "--retain-ann"} }
   custom_enst: { type: 'File?', doc: "Use a file with ens tx IDs for each gene to override VEP PICK",
     inputBinding: {position: 7, prefix: "--custom-enst"} }
-  maf_center: {type: 'string?', doc: "Sequencing center of variant called", default: "."}
+  maf_center: {type: 'string?', doc: "Sequencing center of variant called", default: ".",
+    inputBinding: { position: 8, prefix: "--maf-center"} }
 
 outputs:
   output_maf:
