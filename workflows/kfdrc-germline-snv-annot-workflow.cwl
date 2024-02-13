@@ -219,7 +219,8 @@ inputs:
   # bcftools annotate if more to do
   bcftools_annot_clinvar_columns: {type: 'string?', doc: "csv string of columns from annotation to port into the input vcf", default: "INFO/ALLELEID,INFO/CLNDN,INFO/CLNDNINCL,INFO/CLNDISDB,INFO/CLNDISDBINCL,INFO/CLNHGVS,INFO/CLNREVSTAT,INFO/CLNSIG,INFO/CLNSIGCONF,INFO/CLNSIGINCL,INFO/CLNVC,INFO/CLNVCSO,INFO/CLNVI"}
   clinvar_annotation_vcf: {type: 'File?', secondaryFiles: ['.tbi'], doc: "additional bgzipped annotation vcf file"}
-  echtvar_anno_zips: {type: 'File[]?', doc: "Annotation ZIP files for echtvar anno"}
+  echtvar_anno_zips: { type: 'File[]?', doc: "Annotation ZIP files for echtvar anno",
+    "sbg:suggestedValue": [{class: File, path: 65c64d847dab7758206248c6, name: gnomad.v3.1.1.custom.echtvar.zip}] } 
   # VEP-specific
   disable_vep_annotation: {type: 'boolean?', doc: "Disable VEP Annotation and skip this task.", default: false}
   vep_ram: {type: 'int?', default: 48, doc: "In GB, may need to increase this value depending on the size/complexity of input"}
@@ -318,7 +319,7 @@ steps:
       output_filename:
         source: [output_basename, tool_name]
         valueFrom: |
-          $(self[0]).$(self[1]).bcf_annotated.vcf.gz
+          $(self[0]).$(self[1]).echtvar_annotated.vcf.gz
     out: [annotated_vcf]
 
   bcftools_clinvar_annotate:
@@ -341,17 +342,14 @@ steps:
     in:
       input_files:
         source: [bcftools_clinvar_annotate/bcftools_annotated_vcf, echtvar_anno/annotated_vcf, vep_annotate_vcf/output_vcf]
-       valueFrom: |
-         ${
-           var first_non_null = self.filter(function(e) { return e != null }).shift();
-           return [first_non_null, first_non_null.secondaryFiles[0]];
-         }
-          }"
+        valueFrom: |
+          ${ var first_non_null = self.filter(function(e) { return e != null }).shift();
+            return [first_non_null, first_non_null.secondaryFiles[0]];
+          }
       rename_to:
         source: [output_basename, tool_name]
         valueFrom: |
-          ${
-            var pro_vcf = '.'.join([self[0], self[1], 'vcf.gz']);
+          ${ var pro_vcf = [self[0], self[1], 'vcf.gz'].join('.');
             return [pro_vcf, pro_vcf + '.tbi'];
           }
     out: [renamed_files]
@@ -363,6 +361,6 @@ sbg:license: Apache License 2.0
 sbg:publisher: KFDRC
 
 "sbg:links":
-- id: 'https://github.com/kids-first/kids-first/kf-annotation-tools/releases/tag/v1.0.0'
+- id: 'https://github.com/kids-first/kids-first/kf-annotation-tools/releases/tag/v1.1.0'
   label: github-release
 

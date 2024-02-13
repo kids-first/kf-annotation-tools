@@ -16,8 +16,6 @@ arguments:
   - position: 0
     shellQuote: false
     valueFrom: >-
-      -R $(inputs.reference.path)
-      -V $(inputs.input_vcf.path)
       -O $(inputs.output_basename).$(inputs.tool_name).gatk.soft_filtered.vcf.gz
       ${
         var args = "";
@@ -28,8 +26,10 @@ arguments:
       }
 
 inputs:
-    input_vcf: {type: 'File', secondaryFiles: ['.tbi']}
-    reference: {type: 'File', secondaryFiles: [^.dict, .fai]}
+    input_vcf: { type: 'File', secondaryFiles: ['.tbi'],
+      inputBinding: { position: 0, prefix: "-V" } }
+    reference: { type: 'File', secondaryFiles: [^.dict, .fai],
+      inputBinding: { position: 0, prefix: "-R"} }
     filter_name: {type: 'string[]', doc: "Array of names for each filter tag to add"}
     filter_expression: {type: 'string[]', doc: "Array of filter expressions to establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration for clues"}
     threads: {type: 'int?', doc: "Number of compression/decompression threads", default: 4}

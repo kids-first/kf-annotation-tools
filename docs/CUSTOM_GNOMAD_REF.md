@@ -73,7 +73,7 @@ First, create a config JSON file. See [here](https://github.com/brentp/echtvar#c
 ```sh
 echtvar \
    encode \
-   gnomad.v3.1.1.chr16_custom.echtvar.zip \
+   gnomad.v3.1.1.custom.echtvar.zip \
    gnomad_update.json \
-   gnomad.genomes.v3.1.1.sites.chr16.custom.INFO_added.vcf.gz
+   *.custom.INFO_added.vcf.gz
 ```
