@@ -1,7 +1,7 @@
 cwlVersion: v1.2
 class: Workflow
-id: kfdrc_annot_vcf_wf
-label: Kids First DRC SNV Annotation Workflow
+id: kfdrc-somatic-snv-annot-wf
+label: Kids First DRC Somatic SNV Annotation Workflow
 doc: |
   # Kids First DRC Somatic Variant Annotation Workflow
   This is a subworkflow that is part of the Kids First DRC Somatic Variant Workflow that can be run as standalone.
@@ -106,7 +106,7 @@ inputs:
       \ needed to avoid conflict, i.e INFO/AF"}
   bcftools_prefilter_csv: {type: 'string?', doc: "csv of bcftools filter params if\
       \ you want to prefilter before annotation"}
-  echtvar_anno_zips: {type: 'File[]?', doc: "Annotation ZIP files for echtvar anno"}
+  echtvar_anno_zips: {type: 'File[]?', doc: "Annotation ZIP files for echtvar anno", "sbg:suggestedValue": [{class: File, path: 65c64d847dab7758206248c6, name: gnomad.v3.1.1.custom.echtvar.zip}]}
   bcftools_public_filter: {type: 'string?', doc: "Will hard filter final result to\
       \ create a public version", default: FILTER="PASS"|INFO/HotSpotAllele=1}
   gatk_filter_name: {type: 'string[]', doc: "Array of names for each filter tag to\
