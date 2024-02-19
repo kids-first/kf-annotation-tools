@@ -246,7 +246,7 @@ steps:
       output_filename:
         source: [output_basename, tool_name]
         valueFrom: |
-          $(self[0]).$(self[1]).bcf_annotated.vcf.gz
+          $(self[0]).$(self[1]).echtvar_annotated.vcf.gz
     out: [annotated_vcf]
   gatk_add_soft_filter:
     run: ../tools/gatk_variant_filter.cwl
@@ -314,13 +314,19 @@ steps:
     in:
       input_files:
         source: [hotspots_annotation/hotspots_vcf, kfdrc_vcf2maf_protected/output_maf]
-        valueFrom: "${return [self[0],self[0].secondaryFiles[0],self[1]]}"
+        valueFrom: |
+          $([self[0], self[0].secondaryFiles[0], self[1]])
       rename_to:
         source: [output_basename, tool_name]
-        valueFrom: "${var pro_vcf=self[0] + '.' + self[1] + '.norm.annot.protected.vcf.gz';\
-          \ var pro_tbi=self[0] + '.' + self[1] + '.norm.annot.protected.vcf.gz.tbi';\
-          \ var pro_maf=self[0] + '.' + self[1] + '.norm.annot.protected.maf'; return\
-          \ [pro_vcf, pro_tbi, pro_maf];}"
+        valueFrom: |
+          ${
+            var prefix = self[0] + '.' + self[1] + '.norm.annot.protected';
+            return [
+              prefix + '.vcf.gz',
+              prefix + '.vcf.gz.tbi',
+              prefix + '.maf'
+            ];
+          }
     out: [renamed_files]
   rename_public:
     run: ../tools/generic_rename_outputs.cwl
@@ -328,13 +334,19 @@ steps:
     in:
       input_files:
         source: [hard_filter_vcf/filtered_vcf, kfdrc_vcf2maf_public/output_maf]
-        valueFrom: "${return [self[0],self[0].secondaryFiles[0],self[1]]}"
+        valueFrom: |
+          $([self[0], self[0].secondaryFiles[0], self[1]])
       rename_to:
         source: [output_basename, tool_name]
-        valueFrom: "${var pub_vcf=self[0] + '.' + self[1] + '.norm.annot.public.vcf.gz';\
-          \ var pub_tbi=self[0] + '.' + self[1] + '.norm.annot.public.vcf.gz.tbi';\
-          \ var pub_maf=self[0] + '.' + self[1] + '.norm.annot.public.maf'; return\
-          \ [pub_vcf, pub_tbi, pub_maf];}"
+        valueFrom: |
+          ${
+            var prefix = self[0] + '.' + self[1] + '.norm.annot.public';
+            return [
+              prefix + '.vcf.gz',
+              prefix + '.vcf.gz.tbi',
+              prefix + '.maf'
+            ];
+          }
     out: [renamed_files]
 $namespaces:
   sbg: https://sevenbridges.com
