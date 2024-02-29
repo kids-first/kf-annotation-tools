@@ -61,22 +61,22 @@ jobs:
         cd germline
         git submodule update --remote --recursive kf-annotation-tools
         cd kf-annotation-tools
-        git checkout github.ref_name
+        git checkout $GITHUB_REF_NAME
         cd ../../joint-genotyping
         git submodule update --remote --recursive kf-annotation-tools
         cd kf-annotation-tools
-        git checkout github.ref_name
+        git checkout $GITHUB_REF_NAME
     - id: update-somatic-submodules
       if: ${{ env.SOMATIC_VERSION == github.ref_name }}
       run: |
         cd somatic
         git submodule update --remote --recursive kf-annotation-tools
         cd kf-annotation-tools
-        git checkout github.ref_name
+        git checkout $GITHUB_REF_NAME
         cd ../../tumor-only
         git submodule update --remote --recursive kf-annotation-tools
         cd kf-annotation-tools
-        git checkout github.ref_name
+        git checkout $GITHUB_REF_NAME
     - id: cpr-germline
       if: ${{ env.GERMLINE_VERSION == github.ref_name }}
       name: Create Pull Request
