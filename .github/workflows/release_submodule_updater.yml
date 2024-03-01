@@ -128,7 +128,7 @@ jobs:
         branch: annotation-submodule-to-${{ github.ref_name }}
         labels: bix-dev
     - id: cpr-tumor-only
-      if: ${{ env.GERMLINE_VERSION == github.ref_name }}
+      if: ${{ env.SOMATIC_VERSION == github.ref_name }}
       name: Tumor Only PR
       uses: peter-evans/create-pull-request@v5
       with:
