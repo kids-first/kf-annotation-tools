@@ -56,6 +56,7 @@ jobs:
         SVERSION=$(yq '."sbg:links" | .[] | select(.label == "github-release") | .id | split("/") | .[-1]' ./annotation/workflows/kfdrc-somatic-snv-annot-workflow.cwl)
         echo "SOMATIC_VERSION=$SVERSION" >> "$GITHUB_ENV"
     - id: update-germline-submodules
+      name: Update Germline Submodules
       if: ${{ env.GERMLINE_VERSION == github.ref_name }}
       run: |
         cd germline
@@ -67,6 +68,7 @@ jobs:
         cd kf-annotation-tools
         git checkout $GITHUB_REF_NAME
     - id: update-somatic-submodules
+      name: Update Somatic Submodules
       if: ${{ env.SOMATIC_VERSION == github.ref_name }}
       run: |
         cd somatic
@@ -79,7 +81,7 @@ jobs:
         git checkout $GITHUB_REF_NAME
     - id: cpr-germline
       if: ${{ env.GERMLINE_VERSION == github.ref_name }}
-      name: Create Pull Request
+      name: Germline PR
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.MIGBRO_GHA_PAT }}
@@ -111,7 +113,7 @@ jobs:
         labels: bix-dev
     - id: cpr-somatic
       if: ${{ env.SOMATIC_VERSION == github.ref_name }}
-      name: Create Pull Request
+      name: Somatic PR
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.MIGBRO_GHA_PAT }}
