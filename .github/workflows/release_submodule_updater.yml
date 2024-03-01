@@ -82,6 +82,7 @@ jobs:
       name: Create Pull Request
       uses: peter-evans/create-pull-request@v5
       with:
+        token: ${{ secrets.MIGBRO_GHA_PAT }}
         path: ./germline
         commit-message: ":robot: update annotation submodule"
         title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
@@ -97,6 +98,7 @@ jobs:
       name: Joint Genotyping PR
       uses: peter-evans/create-pull-request@v5
       with:
+        token: ${{ secrets.MIGBRO_GHA_PAT }}
         path: ./joint-genotyping
         commit-message: ":robot: update annotation submodule"
         title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
@@ -112,6 +114,7 @@ jobs:
       name: Create Pull Request
       uses: peter-evans/create-pull-request@v5
       with:
+        token: ${{ secrets.MIGBRO_GHA_PAT }}
         path: ./somatic
         commit-message: ":robot: update annotation submodule"
         title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
@@ -127,6 +130,7 @@ jobs:
       name: Tumor Only PR
       uses: peter-evans/create-pull-request@v5
       with:
+        token: ${{ secrets.MIGBRO_GHA_PAT }}
         path: ./tumor-only
         commit-message: ":robot: update annotation submodule"
         title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
