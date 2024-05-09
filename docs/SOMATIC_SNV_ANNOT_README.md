@@ -38,7 +38,7 @@ Secondary files needed for each reference file will be a sub-bullet point
    - `Homo_sapiens_assembly38.fasta.fai`
    - `Homo_sapiens_assembly38.dict`
  - `echtvar_anno_zips`: `gnomad.v3.1.1.custom.echtvar.zip`
- - `bcftools_strip_columns`: "csv string of columns to strip if needed to avoid conflict, i.e INFO/AF
+ - `bcftools_strip_columns`: csv string of columns to strip if needed to avoid conflict, i.e INFO/AF
  - `bcftools_public_filter`: 'FILTER="PASS"|INFO/HotSpotAllele=1'
  - `gatk_filter_name`: ["NORM_DP_LOW", "GNOMAD_AF_HIGH"]
  - `gatk_filter_expression`: ["vc.getGenotype('insert_normal_sample_name').getDP() <= 7", "gnomad_3_1_1_AF != '.' && gnomad_3_1_1_AF > 0.001 && gnomad_3_1_1_FILTER=='PASS'"] # NOTE!! Replace `insert_normal_sample_name` with the value you'd use for `input_normal_name`! # NOTE!! If your annotation includes dot values, those values must first be excluded! If they are not, GATK will error trying to convert those values!
