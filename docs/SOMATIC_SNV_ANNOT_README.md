@@ -65,7 +65,7 @@ For each input, the sub-bullet refers to when to use the suggested input
    - Vardict: "HGVSg"
  - `bcftools_strip_columns` # if reannotating an old file:
    - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/CSQ,INFO/HotSpotAllele" # recommended if re-annotating from an older VEP cache
-   - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/HotSpotAllele" # recommended if repeating hot spot an d want to keep VEP
+   - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/HotSpotAllele" # recommended if repeating hot spot and want to keep VEP
  - `bcftools_prefilter_csv` # if annotating a file with calls you want screen for, use this. i.e `FILTER="PASS"`
  - `disable_vep_annotation` # set to `True` if existing VEP annotation of file is ok
  - `tool_name`:
