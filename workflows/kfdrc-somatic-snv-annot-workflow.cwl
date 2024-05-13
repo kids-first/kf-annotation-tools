@@ -43,7 +43,7 @@ doc: |
      - `Homo_sapiens_assembly38.fasta.fai`
      - `Homo_sapiens_assembly38.dict`
    - `echtvar_anno_zips`: `gnomad.v3.1.1.custom.echtvar.zip`
-   - `bcftools_strip_columns`: "csv string of columns to strip if needed to avoid conflict, i.e INFO/AF
+   - `bcftools_strip_columns`: csv string of columns to strip if needed to avoid conflict, i.e INFO/AF
    - `bcftools_public_filter`: 'FILTER="PASS"|INFO/HotSpotAllele=1'
    - `gatk_filter_name`: ["NORM_DP_LOW", "GNOMAD_AF_HIGH"]
    - `gatk_filter_expression`: ["vc.getGenotype('insert_normal_sample_name').getDP() <= 7", "gnomad_3_1_1_AF != '.' && gnomad_3_1_1_AF > 0.001 && gnomad_3_1_1_FILTER=='PASS'"] # NOTE!! Replace `insert_normal_sample_name` with the value you'd use for `input_normal_name`! # NOTE!! If your annotation includes dot values, those values must first be excluded! If they are not, GATK will error trying to convert those values!
@@ -70,7 +70,7 @@ doc: |
      - Vardict: "HGVSg"
    - `bcftools_strip_columns` # if reannotating an old file:
      - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/CSQ,INFO/HotSpotAllele" # recommended if re-annotating from an older VEP cache
-     - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/HotSpotAllele" # recommended if repeating hot spot an d want to keep VEP
+     - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/HotSpotAllele" # recommended if repeating hot spot and want to keep VEP
    - `bcftools_prefilter_csv` # if annotating a file with calls you want screen for, use this. i.e `FILTER="PASS"`
    - `disable_vep_annotation` # set to `True` if existing VEP annotation of file is ok
    - `tool_name`:
@@ -146,10 +146,10 @@ inputs:
         class: File, path: 607713829360f10e3982a423, name: tert.bed}]}
   protein_snv_hotspots: {type: 'File[]?', doc: "Column-name-containing, tab-delimited
       file(s) containing protein names and amino acid positions corresponding to hotspots",
-    "sbg:suggestedValue": [{class: File, path: 645919782fe81458768c552c, name: protein_snv_cancer_hotspots_v2.ENS105_liftover.tsv}]}
+    "sbg:suggestedValue": [{class: File, path: 663d2bcc27374715fccd8c6a, name: protein_snv_cancer_hotspots_v2.ENS105_liftover.tsv}]}
   protein_indel_hotspots: {type: 'File[]?', doc: "Column-name-containing, tab-delimited
       file(s) containing protein names and amino acid position ranges corresponding
-      to hotspots", "sbg:suggestedValue": [{class: File, path: 645919782fe81458768c552d,
+      to hotspots", "sbg:suggestedValue": [{class: File, path: 663d2bcc27374715fccd8c6f,
         name: protein_indel_cancer_hotspots_v2.ENS105_liftover.tsv}]}
   output_basename: string
   tool_name: string
@@ -161,7 +161,7 @@ inputs:
       to retain as extra columns in MAF"}
   maf_center: {type: 'string?', doc: "Sequencing center of variant called", default: "."}
   custom_enst: {type: 'File?', doc: "Use a file with ens tx IDs for each gene to override
-      VEP PICK", "sbg:suggestedValue": {class: File, path: 6480c8a61dfc710d24a3a368,
+      VEP PICK", "sbg:suggestedValue": {class: File, path: 663d2bcc27374715fccd8c65,
       name: kf_isoform_override.tsv}}
 outputs:
   annotated_protected: {type: 'File[]', outputSource: rename_protected/renamed_files}
@@ -352,5 +352,5 @@ $namespaces:
 "sbg:license": Apache License 2.0
 "sbg:publisher": KFDRC
 "sbg:links":
-- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.2.0'
+- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.2.1'
   label: github-release

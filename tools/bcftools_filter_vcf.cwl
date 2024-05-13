@@ -10,7 +10,7 @@ requirements:
     ramMin: 1000
     coresMin: 1
   - class: InlineJavascriptRequirement
-baseCommand: []
+baseCommand: [bash -c 'set -eo pipefail &&]
 arguments:
   - position: 1
     shellQuote: false
@@ -22,18 +22,18 @@ arguments:
         }
         var cmd = "bcftools view ";
         if (inputs.include_expression != null){
-            cmd += "--include '" + inputs.include_expression + "' " + inputs.input_vcf.path;
+            cmd += "--include \"" + inputs.include_expression + "\" " + inputs.input_vcf.path;
             if (inputs.exclude_expression != null){
-                cmd += " | bcftools view --exclude '" + inputs.exclude_expression + "' -O z > " + out_base + ".vcf.gz;";
+                cmd += " | bcftools view --exclude \"" + inputs.exclude_expression + "\"' -O z > " + out_base + ".vcf.gz;";
             } else {
                 cmd += " -O z > " + out_base + ".vcf.gz;";
             }
         } else if (inputs.include_expression == null && inputs.exclude_expression != null){
-            cmd += "--exclude '" + inputs.exclude_expression + "' " + inputs.input_vcf.path + " -O z > " + out_base + ".vcf.gz;";
+            cmd += "--exclude \"" + inputs.exclude_expression + "\" " + inputs.input_vcf.path + " -O z > " + out_base + ".vcf.gz;";
         } else if (inputs.include_expression == null && inputs.exclude_expression == null){
             cmd = "cp " + inputs.input_vcf.path + " ./" + out_base + ".vcf.gz;";
         }
-        cmd += "tabix " + out_base + ".vcf.gz;"
+        cmd += "tabix " + out_base + ".vcf.gz;'"
         return cmd;
       }
 
