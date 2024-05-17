@@ -59,5 +59,5 @@ outputs:
   filtered_vcf:
     type: File
     outputBinding:
-      glob: '*bcf_filtered*'
+      glob: "*.{v,b}cf{,.gz}"
     secondaryFiles: ['.tbi?']
