@@ -204,6 +204,8 @@ requirements:
 - class: ScatterFeatureRequirement
 - class: MultipleInputFeatureRequirement
 - class: SubworkflowFeatureRequirement
+- class: StepInputExpressionRequirement
+- class: InlineJavascriptRequirement
 inputs:
   indexed_reference_fasta: {type: 'File', secondaryFiles: [.fai, ^.dict], "sbg:suggestedValue": {class: File, path: 60639014357c3a53540ca7a3,
       name: Homo_sapiens_assembly38.fasta, secondaryFiles: [{class: File, path: 60639019357c3a53540ca7e7, name: Homo_sapiens_assembly38.dict},
@@ -251,6 +253,8 @@ steps:
       input_vcf: input_vcf
       include_expression: bcftools_prefilter_csv
       output_basename: output_basename
+      output_type:
+        valueFrom: "z"
     out: [filtered_vcf]
 
   normalize_vcf:

@@ -48,7 +48,7 @@ inputs:
   threads: { type: 'int?', default: 4 }
   exclude_expression: { type: 'string?', doc: "See bcftools docs for valid expression. Can't be used at the same time as include_expression.  Use double quotes when a string needs to be quoted"}
   filter_expression: { type: 'string?', doc: "Add values from FILTER field to subset on"}
-  output_type: { type: [ 'null', {type: enum, name: output_type, symbols: [ "u", "b", "v", "z"]}]}
+  output_type: { type: [ 'null', {type: enum, name: output_type, symbols: [ "u", "b", "v", "z"]}], default: "z"}
   sample_name: { type: 'string?', doc: "csv string of samples if user wishes to apply filtering to and output specific samples"}
   output_basename: string
 outputs:
