@@ -291,6 +291,8 @@ steps:
       input_vcf: hotspots_annotation/hotspots_vcf
       include_expression: bcftools_public_filter
       output_basename: output_basename
+      output_type:
+        valueFrom: "z"
     out: [filtered_vcf]
   kfdrc_vcf2maf_public:
     run: ../tools/kf_mskcc_vcf2maf.cwl

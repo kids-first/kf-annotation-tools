@@ -251,6 +251,8 @@ steps:
       input_vcf: input_vcf
       include_expression: bcftools_prefilter_csv
       output_basename: output_basename
+      output_type:
+        valueFrom: "z"
     out: [filtered_vcf]
 
   normalize_vcf:
