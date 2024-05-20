@@ -361,6 +361,6 @@ sbg:license: Apache License 2.0
 sbg:publisher: KFDRC
 
 "sbg:links":
-- id: 'https://github.com/kids-first/kids-first/kf-annotation-tools/releases/tag/v1.1.0'
+- id: 'https://github.com/kids-first/kids-first/kf-annotation-tools/releases/tag/v1.2.2'
   label: github-release
 

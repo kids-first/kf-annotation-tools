@@ -20,7 +20,7 @@ arguments:
   - position: 1
     shellQuote: false
     valueFrom: >-
-      $(inputs.input_vcf.path) > input_file.vcf
+      > input_file.vcf
       && perl vcf2maf.pl
       --input-vcf input_file.vcf
       --output-maf $(inputs.output_basename).$(inputs.tool_name).vep.maf
@@ -28,7 +28,8 @@ arguments:
 inputs:
   reference: { type: 'File',  secondaryFiles: [.fai], doc: "Fasta genome assembly with index",
     inputBinding: {position: 2, prefix: "--ref-fasta"} }
-  input_vcf: { type: 'File', secondaryFiles: [.tbi], doc: "VEP annotated vcf file." }
+  input_vcf: { type: File, doc: "VEP annotated vcf file.", 
+    inputBinding: { position: 0 } }
   output_basename: string
   tumor_id: { type: string, inputBinding: {position: 3, prefix: "--tumor-id"} }
   normal_id: { type: string, inputBinding: {position: 4, prefix: "--normal-id"} }
