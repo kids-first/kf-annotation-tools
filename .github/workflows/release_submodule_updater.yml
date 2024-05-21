@@ -45,6 +45,7 @@ jobs:
       with:
         repository: kids-first/kf-jointgenotyping-workflow
         path: joint-genotyping
+        submodules: true
     - id: get-germline-annot-version
       name: Get Germline Annotation Workflow Version
       run: |
