@@ -354,5 +354,5 @@ $namespaces:
 "sbg:license": Apache License 2.0
 "sbg:publisher": KFDRC
 "sbg:links":
-- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.2.2'
+- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.2.3'
   label: github-release
