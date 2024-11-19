@@ -49,7 +49,7 @@ doc: |
    - `gatk_filter_expression`: ["vc.getGenotype('insert_normal_sample_name').getDP() <= 7", "gnomad_3_1_1_AF != '.' && gnomad_3_1_1_AF > 0.001 && gnomad_3_1_1_FILTER=='PASS'"] # NOTE!! Replace `insert_normal_sample_name` with the value you'd use for `input_normal_name`! # NOTE!! If your annotation includes dot values, those values must first be excluded! If they are not, GATK will error trying to convert those values!
    - `vep_cache`: `homo_sapiens_merged_vep_105_indexed_GRCh38.tar.gz`
    - `genomic_hotspots`: `tert.bed` # This file has two common TERT promoter gene hot spots
-   - `protein_snv_hotspots`: `kfdrc_protein_snv_cancer_hotspots_20240718.txt` # A text formatted SNV + MNV version of https://www.cancerhotspots.org/files/hotspots_v2.xls. See file header for details
+   - `protein_snv_hotspots`: `kfdrc_protein_snv_cancer_hotspots_20240718.txt` #  Column-name-containing, tab-delimited file(s) containing protein names and amino acid positions corresponding to hotspots. File header contains generation history
    - `protein_indel_hotspots`: `protein_indel_cancer_hotspots_v2.ENS105_liftover.tsv` # A tsv formatted INDEL subset of https://www.cancerhotspots.org/files/hotspots_v2.xls
    - `custom_enst`: `kf_isoform_override.tsv` # As of VEP 104, several genes have had their canonical transcripts redefined. While the VCF will have all possible isoforms, this affects maf file output and may results in representative protein changes that defy historical expectations
 
@@ -63,21 +63,26 @@ doc: |
      - Mutect2: "gnomad_3_1_1_AC,gnomad_3_1_1_AN,gnomad_3_1_1_AF,gnomad_3_1_1_nhomalt,gnomad_3_1_1_AC_popmax,gnomad_3_1_1_AN_popmax,gnomad_3_1_1_AF_popmax,gnomad_3_1_1_nhomalt_popmax,gnomad_3_1_1_AC_controls_and_biobanks,gnomad_3_1_1_AN_controls_and_biobanks,gnomad_3_1_1_AF_controls_and_biobanks,gnomad_3_1_1_AF_non_cancer,gnomad_3_1_1_primate_ai_score,gnomad_3_1_1_splice_ai_consequence,gnomad_3_1_1_AF_non_cancer_afr,gnomad_3_1_1_AF_non_cancer_ami,gnomad_3_1_1_AF_non_cancer_asj,gnomad_3_1_1_AF_non_cancer_eas,gnomad_3_1_1_AF_non_cancer_fin,gnomad_3_1_1_AF_non_cancer_mid,gnomad_3_1_1_AF_non_cancer_nfe,gnomad_3_1_1_AF_non_cancer_oth,gnomad_3_1_1_AF_non_cancer_raw,gnomad_3_1_1_AF_non_cancer_sas,gnomad_3_1_1_AF_non_cancer_amr,gnomad_3_1_1_AF_non_cancer_popmax,gnomad_3_1_1_AF_non_cancer_all_popmax,gnomad_3_1_1_FILTER,MBQ,TLOD,HotSpotAllele"
      - Lancet: "gnomad_3_1_1_AC,gnomad_3_1_1_AN,gnomad_3_1_1_AF,gnomad_3_1_1_nhomalt,gnomad_3_1_1_AC_popmax,gnomad_3_1_1_AN_popmax,gnomad_3_1_1_AF_popmax,gnomad_3_1_1_nhomalt_popmax,gnomad_3_1_1_AC_controls_and_biobanks,gnomad_3_1_1_AN_controls_and_biobanks,gnomad_3_1_1_AF_controls_and_biobanks,gnomad_3_1_1_AF_non_cancer,gnomad_3_1_1_primate_ai_score,gnomad_3_1_1_splice_ai_consequence,gnomad_3_1_1_AF_non_cancer_afr,gnomad_3_1_1_AF_non_cancer_ami,gnomad_3_1_1_AF_non_cancer_asj,gnomad_3_1_1_AF_non_cancer_eas,gnomad_3_1_1_AF_non_cancer_fin,gnomad_3_1_1_AF_non_cancer_mid,gnomad_3_1_1_AF_non_cancer_nfe,gnomad_3_1_1_AF_non_cancer_oth,gnomad_3_1_1_AF_non_cancer_raw,gnomad_3_1_1_AF_non_cancer_sas,gnomad_3_1_1_AF_non_cancer_amr,gnomad_3_1_1_AF_non_cancer_popmax,gnomad_3_1_1_AF_non_cancer_all_popmax,gnomad_3_1_1_FILTER,MS,FETS,HotSpotAllele"
      - Vardict: "gnomad_3_1_1_AC,gnomad_3_1_1_AN,gnomad_3_1_1_AF,gnomad_3_1_1_nhomalt,gnomad_3_1_1_AC_popmax,gnomad_3_1_1_AN_popmax,gnomad_3_1_1_AF_popmax,gnomad_3_1_1_nhomalt_popmax,gnomad_3_1_1_AC_controls_and_biobanks,gnomad_3_1_1_AN_controls_and_biobanks,gnomad_3_1_1_AF_controls_and_biobanks,gnomad_3_1_1_AF_non_cancer,gnomad_3_1_1_primate_ai_score,gnomad_3_1_1_splice_ai_consequence,gnomad_3_1_1_AF_non_cancer_afr,gnomad_3_1_1_AF_non_cancer_ami,gnomad_3_1_1_AF_non_cancer_asj,gnomad_3_1_1_AF_non_cancer_eas,gnomad_3_1_1_AF_non_cancer_fin,gnomad_3_1_1_AF_non_cancer_mid,gnomad_3_1_1_AF_non_cancer_nfe,gnomad_3_1_1_AF_non_cancer_oth,gnomad_3_1_1_AF_non_cancer_raw,gnomad_3_1_1_AF_non_cancer_sas,gnomad_3_1_1_AF_non_cancer_amr,gnomad_3_1_1_AF_non_cancer_popmax,gnomad_3_1_1_AF_non_cancer_all_popmax,gnomad_3_1_1_FILTER,MSI,MSILEN,SOR,SSF,HotSpotAllele"
+     - Consensus: "gnomad_3_1_1_AC,gnomad_3_1_1_AN,gnomad_3_1_1_AF,gnomad_3_1_1_nhomalt,gnomad_3_1_1_AC_popmax,gnomad_3_1_1_AN_popmax,gnomad_3_1_1_AF_popmax,gnomad_3_1_1_nhomalt_popmax,gnomad_3_1_1_AC_controls_and_biobanks,gnomad_3_1_1_AN_controls_and_biobanks,gnomad_3_1_1_AF_controls_and_biobanks,gnomad_3_1_1_AF_non_cancer,gnomad_3_1_1_primate_ai_score,gnomad_3_1_1_splice_ai_consequence,gnomad_3_1_1_AF_non_cancer_afr,gnomad_3_1_1_AF_non_cancer_ami,gnomad_3_1_1_AF_non_cancer_asj,gnomad_3_1_1_AF_non_cancer_eas,gnomad_3_1_1_AF_non_cancer_fin,gnomad_3_1_1_AF_non_cancer_mid,gnomad_3_1_1_AF_non_cancer_nfe,gnomad_3_1_1_AF_non_cancer_oth,gnomad_3_1_1_AF_non_cancer_raw,gnomad_3_1_1_AF_non_cancer_sas,gnomad_3_1_1_AF_non_cancer_amr,gnomad_3_1_1_AF_non_cancer_popmax,gnomad_3_1_1_AF_non_cancer_all_popmax,gnomad_3_1_1_FILTER,MQ,MQ0,CAL,HotSpotAllele"
    - `retain_ann` # Similar to above, if run for KF harmonization, recommend the following:
      - Strelka2: "HGVSg"
      - Mutect2: "HGVSg"
      - Lancet: "HGVSg"
      - Vardict: "HGVSg"
+     - Consensus: "HGVSg"
    - `bcftools_strip_columns` # if reannotating an old file:
      - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/CSQ,INFO/HotSpotAllele" # recommended if re-annotating from an older VEP cache
      - "FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/HotSpotAllele" # recommended if repeating hot spot and want to keep VEP
    - `bcftools_prefilter_csv` # if annotating a file with calls you want screen for, use this. i.e `FILTER="PASS"`
+   - `disable_norm` # set to `True` if existing input already normalized or of you have justification for skipping this step
    - `disable_vep_annotation` # set to `True` if existing VEP annotation of file is ok
+   - `disable_hotspot_annotation` # set to `True` if existing HotSpot annotation is ok
    - `tool_name`:
      - `Strelka2`: `strelka2_somatic`
      - `Mutect2`: `mutect2_somatic`
      - `Lancet`: `lancet_somatic`
      - `VarDict Java`: `vardict_somatic`
+     - `consensus`: `consensus_somatic`
    - `vep_cores`: `16`
    - `vep_ram`: `32`
    - `vep_buffer`: `5000`
@@ -91,79 +96,52 @@ requirements:
 - class: StepInputExpressionRequirement
 - class: InlineJavascriptRequirement
 inputs:
-  indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict], "sbg:suggestedValue": {
-      class: File, path: 60639014357c3a53540ca7a3, name: Homo_sapiens_assembly38.fasta,
-      secondaryFiles: [{class: File, path: 60639016357c3a53540ca7af, name: Homo_sapiens_assembly38.fasta.fai},
+  indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict], "sbg:suggestedValue": {class: File, path: 60639014357c3a53540ca7a3,
+      name: Homo_sapiens_assembly38.fasta, secondaryFiles: [{class: File, path: 60639016357c3a53540ca7af, name: Homo_sapiens_assembly38.fasta.fai},
         {class: File, path: 60639019357c3a53540ca7e7, name: Homo_sapiens_assembly38.dict}]}}
-  input_vcf: {type: 'File', secondaryFiles: ['.tbi'], doc: "Input vcf to annotate
-      and soft filter"}
+  input_vcf: {type: 'File', secondaryFiles: ['.tbi'], doc: "Input vcf to annotate and soft filter"}
   input_tumor_name: string
   input_normal_name: string
-  add_common_fields: {type: 'boolean', doc: "Set to true if input is a strelka2 vcf
-      that hasn't had common fields added", default: false}
-  bcftools_strip_columns: {type: 'string?', doc: "csv string of columns to strip if
-      needed to avoid conflict, i.e INFO/AF"}
-  bcftools_prefilter_csv: {type: 'string?', doc: "csv of bcftools filter params if
-      you want to prefilter before annotation"}
+  add_common_fields: {type: 'boolean', doc: "Set to true if input is a strelka2 vcf that hasn't had common fields added", default: false}
+  bcftools_strip_columns: {type: 'string?', doc: "csv string of columns to strip if needed to avoid conflict, i.e INFO/AF"}
+  bcftools_prefilter_csv: {type: 'string?', doc: "csv of bcftools filter params if you want to prefilter before annotation"}
   disable_norm: {type: 'boolean?', doc: "Skip normalization step. Not recommended unless input is already normalized", default: false}
-  disable_hotspot_annotation: {type: 'boolean?', doc: "Disable Hotspot Annotation
-      and skip this task."}
-  disable_vep_annotation: {type: 'boolean?', doc: "Disable VEP Annotation and skip
-      this task.", default: false}
-  echtvar_anno_zips: {type: 'File[]?', doc: "Annotation ZIP files for echtvar anno",
-    "sbg:suggestedValue": [{class: File, path: 65c64d847dab7758206248c6, name: gnomad.v3.1.1.custom.echtvar.zip}]}
-  bcftools_public_filter: {type: 'string?', doc: "Will hard filter final result to
-      create a public version", default: FILTER="PASS"|INFO/HotSpotAllele=1}
-  gatk_filter_name: {type: 'string[]', doc: "Array of names for each filter tag to
-      add"}
-  gatk_filter_expression: {type: 'string[]', doc: "Array of filter expressions to
-      establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration
+  disable_hotspot_annotation: {type: 'boolean?', doc: "Disable Hotspot Annotation and skip this task."}
+  disable_vep_annotation: {type: 'boolean?', doc: "Disable VEP Annotation and skip this task.", default: false}
+  echtvar_anno_zips: {type: 'File[]?', doc: "Annotation ZIP files for echtvar anno", "sbg:suggestedValue": [{class: File, path: 65c64d847dab7758206248c6,
+        name: gnomad.v3.1.1.custom.echtvar.zip}]}
+  bcftools_public_filter: {type: 'string?', doc: "Will hard filter final result to create a public version", default: FILTER="PASS"|INFO/HotSpotAllele=1}
+  gatk_filter_name: {type: 'string[]', doc: "Array of names for each filter tag to add"}
+  gatk_filter_expression: {type: 'string[]', doc: "Array of filter expressions to establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration
       for clues"}
-  vep_ram: {type: 'int?', default: 32, doc: "In GB, may need to increase this value
-      depending on the size/complexity of input"}
-  vep_cores: {type: 'int?', default: 16, doc: "Number of cores to use. May need to
-      increase for really large inputs"}
-  vep_buffer_size: {type: 'int?', default: 1000, doc: "Increase or decrease to balance
-      speed and memory usage"}
-  vep_cache: {type: 'File?', doc: "tar gzipped cache from ensembl/local converted
-      cache", "sbg:suggestedValue": {class: File, path: 6332f8e47535110eb79c794f,
+  vep_ram: {type: 'int?', default: 32, doc: "In GB, may need to increase this value depending on the size/complexity of input"}
+  vep_cores: {type: 'int?', default: 16, doc: "Number of cores to use. May need to increase for really large inputs"}
+  vep_buffer_size: {type: 'int?', default: 1000, doc: "Increase or decrease to balance speed and memory usage"}
+  vep_cache: {type: 'File?', doc: "tar gzipped cache from ensembl/local converted cache", "sbg:suggestedValue": {class: File, path: 6332f8e47535110eb79c794f,
       name: homo_sapiens_merged_vep_105_indexed_GRCh38.tar.gz}}
-  dbnsfp: {type: 'File?', secondaryFiles: [.tbi, ^.readme.txt], doc: "VEP-formatted
-      plugin file, index, and readme file containing dbNSFP annotations"}
-  dbnsfp_fields: {type: 'string?', doc: "csv string with desired fields to annotate.
-      Use ALL to grab all"}
+  dbnsfp: {type: 'File?', secondaryFiles: [.tbi, ^.readme.txt], doc: "VEP-formatted plugin file, index, and readme file containing
+      dbNSFP annotations"}
+  dbnsfp_fields: {type: 'string?', doc: "csv string with desired fields to annotate. Use ALL to grab all"}
   merged: {type: 'boolean?', doc: "Set to true if merged cache used", default: true}
-  run_cache_existing: {type: 'boolean?', doc: "Run the check_existing flag for cache",
-    default: true}
-  run_cache_af: {type: 'boolean?', doc: "Run the allele frequency flags for cache",
-    default: true}
+  run_cache_existing: {type: 'boolean?', doc: "Run the check_existing flag for cache", default: true}
+  run_cache_af: {type: 'boolean?', doc: "Run the allele frequency flags for cache", default: true}
   run_stats: {type: 'boolean?', doc: "Create stats file? Disable for speed", default: false}
-  cadd_indels: {type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin
-      file and index containing CADD indel annotations"}
-  cadd_snvs: {type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file
-      and index containing CADD SNV annotations"}
-  genomic_hotspots: {type: 'File[]?', doc: "Tab-delimited BED formatted file(s) containing
-      hg38 genomic positions corresponding to hotspots", "sbg:suggestedValue": [{
-        class: File, path: 607713829360f10e3982a423, name: tert.bed}]}
-  protein_snv_hotspots: {type: 'File[]?', doc: "Column-name-containing, tab-delimited
-      file(s) containing protein names and amino acid positions corresponding to hotspots",
-    "sbg:suggestedValue": [{class: File, path: 66980e845a58091951d53984, name: kfdrc_protein_snv_cancer_hotspots_20240718.txt}]}
-  protein_indel_hotspots: {type: 'File[]?', doc: "Column-name-containing, tab-delimited
-      file(s) containing protein names and amino acid position ranges corresponding
-      to hotspots", "sbg:suggestedValue": [{class: File, path: 663d2bcc27374715fccd8c6f,
-        name: protein_indel_cancer_hotspots_v2.ENS105_liftover.tsv}]}
+  cadd_indels: {type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file and index containing CADD indel annotations"}
+  cadd_snvs: {type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file and index containing CADD SNV annotations"}
+  genomic_hotspots: {type: 'File[]?', doc: "Tab-delimited BED formatted file(s) containing hg38 genomic positions corresponding to
+      hotspots", "sbg:suggestedValue": [{class: File, path: 607713829360f10e3982a423, name: tert.bed}]}
+  protein_snv_hotspots: {type: 'File[]?', doc: "Column-name-containing, tab-delimited file(s) containing protein names and amino acid
+      positions corresponding to hotspots", "sbg:suggestedValue": [{class: File, path: 66980e845a58091951d53984, name: kfdrc_protein_snv_cancer_hotspots_20240718.txt}]}
+  protein_indel_hotspots: {type: 'File[]?', doc: "Column-name-containing, tab-delimited file(s) containing protein names and amino
+      acid position ranges corresponding to hotspots", "sbg:suggestedValue": [{class: File, path: 663d2bcc27374715fccd8c6f, name: protein_indel_cancer_hotspots_v2.ENS105_liftover.tsv}]}
   output_basename: string
   tool_name: string
-  retain_info: {type: 'string?', doc: "csv string with INFO fields that you want to
-      keep, i.e. for consensus `MQ,MQ0,CAL,Hotspot`"}
-  retain_fmt: {type: 'string?', doc: "csv string with FORMAT fields that you want
-      to keep"}
-  retain_ann: {type: 'string?', doc: "csv string of annotations (within the VEP CSQ/ANN)
-      to retain as extra columns in MAF"}
+  retain_info: {type: 'string?', doc: "csv string with INFO fields that you want to keep, i.e. for consensus `MQ,MQ0,CAL,Hotspot`"}
+  retain_fmt: {type: 'string?', doc: "csv string with FORMAT fields that you want to keep"}
+  retain_ann: {type: 'string?', doc: "csv string of annotations (within the VEP CSQ/ANN) to retain as extra columns in MAF"}
   maf_center: {type: 'string?', doc: "Sequencing center of variant called", default: "."}
-  custom_enst: {type: 'File?', doc: "Use a file with ens tx IDs for each gene to override
-      VEP PICK", "sbg:suggestedValue": {class: File, path: 663d2bcc27374715fccd8c65,
-      name: kf_isoform_override.tsv}}
+  custom_enst: {type: 'File?', doc: "Use a file with ens tx IDs for each gene to override VEP PICK", "sbg:suggestedValue": {class: File,
+      path: 663d2bcc27374715fccd8c65, name: kf_isoform_override.tsv}}
 outputs:
   annotated_protected: {type: 'File[]', outputSource: rename_protected/renamed_files}
   annotated_public: {type: 'File[]', outputSource: rename_public/renamed_files}
@@ -221,7 +199,8 @@ steps:
       ram: vep_ram
       buffer_size: vep_buffer_size
       input_vcf:
-        source: [add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf,
+          input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
       tool_name: tool_name
@@ -240,8 +219,8 @@ steps:
     run: ../tools/echtvar_anno.cwl
     in:
       input_vcf:
-        source: [vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf,
-          normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf,
+          prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       echtvar_zips: echtvar_anno_zips
       tbi:
@@ -256,8 +235,8 @@ steps:
     run: ../tools/gatk_variant_filter.cwl
     in:
       input_vcf:
-        source: [echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf, add_standard_fields/output,
-          bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf,
+          normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       reference: indexed_reference_fasta
       filter_name: gatk_filter_name
@@ -359,5 +338,5 @@ $namespaces:
 "sbg:license": Apache License 2.0
 "sbg:publisher": KFDRC
 "sbg:links":
-- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.2.3'
+- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.2.4'
   label: github-release
