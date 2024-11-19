@@ -49,7 +49,7 @@ inputs:
   csq_class: { type: 'string?', inputBinding: { position: 2, prefix: "--csq_class" }, doc: "Overrides the name of the CSQ field that stores variant class information" }
 
   # Resource Control
-  ram: { type: 'int?', default: 2, doc: "GB of RAM to allocate to this task." }
-  cores: { type: 'int?', default: 1, doc: "CPU cores to allocate to this task." }
+  ram: { type: 'int?', default: 16, doc: "GB of RAM to allocate to this task." }
+  cores: { type: 'int?', default: 8, doc: "CPU cores to allocate to this task." }
 outputs:
   hotspots_vcf: { type: 'File', outputBinding: { glob: '*.gz', outputEval: '$(inputs.disable_hotspot_annotation ? inputs.input_vcf : self)' }, secondaryFiles: [.tbi] }

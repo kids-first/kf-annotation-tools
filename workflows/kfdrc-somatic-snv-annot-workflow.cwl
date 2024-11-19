@@ -105,6 +105,11 @@ inputs:
       needed to avoid conflict, i.e INFO/AF"}
   bcftools_prefilter_csv: {type: 'string?', doc: "csv of bcftools filter params if
       you want to prefilter before annotation"}
+  disable_norm: {type: 'boolean?', doc: "Skip normalization step. Not recommended unless input is already normalized", default: false}
+  disable_hotspot_annotation: {type: 'boolean?', doc: "Disable Hotspot Annotation
+      and skip this task."}
+  disable_vep_annotation: {type: 'boolean?', doc: "Disable VEP Annotation and skip
+      this task.", default: false}
   echtvar_anno_zips: {type: 'File[]?', doc: "Annotation ZIP files for echtvar anno",
     "sbg:suggestedValue": [{class: File, path: 65c64d847dab7758206248c6, name: gnomad.v3.1.1.custom.echtvar.zip}]}
   bcftools_public_filter: {type: 'string?', doc: "Will hard filter final result to
@@ -114,8 +119,6 @@ inputs:
   gatk_filter_expression: {type: 'string[]', doc: "Array of filter expressions to
       establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration
       for clues"}
-  disable_vep_annotation: {type: 'boolean?', doc: "Disable VEP Annotation and skip
-      this task.", default: false}
   vep_ram: {type: 'int?', default: 32, doc: "In GB, may need to increase this value
       depending on the size/complexity of input"}
   vep_cores: {type: 'int?', default: 16, doc: "Number of cores to use. May need to
@@ -139,8 +142,6 @@ inputs:
       file and index containing CADD indel annotations"}
   cadd_snvs: {type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file
       and index containing CADD SNV annotations"}
-  disable_hotspot_annotation: {type: 'boolean?', doc: "Disable Hotspot Annotation
-      and skip this task."}
   genomic_hotspots: {type: 'File[]?', doc: "Tab-delimited BED formatted file(s) containing
       hg38 genomic positions corresponding to hotspots", "sbg:suggestedValue": [{
         class: File, path: 607713829360f10e3982a423, name: tert.bed}]}
@@ -176,6 +177,7 @@ steps:
       output_basename: output_basename
     out: [filtered_vcf]
   normalize_vcf:
+    when: $(inputs.disable_norm == false)
     run: ../tools/normalize_vcf.cwl
     in:
       indexed_reference_fasta: indexed_reference_fasta
@@ -184,12 +186,15 @@ steps:
         pickValue: first_non_null
       output_basename: output_basename
       tool_name: tool_name
+      disable_norm: disable_norm
     out: [normalized_vcf]
   bcftools_strip_info:
     when: $(inputs.strip_info != null)
     run: ../tools/bcftools_strip_ann.cwl
     in:
-      input_vcf: normalize_vcf/normalized_vcf
+      input_vcf:
+        source: [normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        pickValue: first_non_null
       output_basename: output_basename
       tool_name: tool_name
       strip_info: bcftools_strip_columns
@@ -199,7 +204,7 @@ steps:
     when: $(inputs.run_tool_flag)
     in:
       strelka2_vcf:
-        source: [bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf]
+        source: [bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       run_tool_flag: add_common_fields
       tumor_name: input_tumor_name
@@ -216,7 +221,7 @@ steps:
       ram: vep_ram
       buffer_size: vep_buffer_size
       input_vcf:
-        source: [add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf]
+        source: [add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
       tool_name: tool_name
@@ -236,7 +241,7 @@ steps:
     in:
       input_vcf:
         source: [vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf,
-          normalize_vcf/normalized_vcf]
+          normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       echtvar_zips: echtvar_anno_zips
       tbi:
@@ -252,7 +257,7 @@ steps:
     in:
       input_vcf:
         source: [echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf, add_standard_fields/output,
-          bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf]
+          bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       reference: indexed_reference_fasta
       filter_name: gatk_filter_name

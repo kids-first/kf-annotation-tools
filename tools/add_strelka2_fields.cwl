@@ -46,10 +46,10 @@ inputs:
       prefix: '--output_basename'
   cores:
     type: int?
-    default: 4
+    default: 8
   ram:
     type: int?
-    default: 3 
+    default: 16
     doc: 'RAM requirement in GB'
 
 outputs:
