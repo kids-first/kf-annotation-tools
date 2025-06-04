@@ -99,20 +99,21 @@ inputs:
   indexed_reference_fasta: {type: File, secondaryFiles: [.fai, ^.dict], "sbg:suggestedValue": {class: File, path: 60639014357c3a53540ca7a3,
       name: Homo_sapiens_assembly38.fasta, secondaryFiles: [{class: File, path: 60639016357c3a53540ca7af, name: Homo_sapiens_assembly38.fasta.fai},
         {class: File, path: 60639019357c3a53540ca7e7, name: Homo_sapiens_assembly38.dict}]}}
-  input_vcf: {type: 'File', secondaryFiles: ['.tbi'], doc: "Input vcf to annotate and soft filter"}
+  input_vcf: {type: 'File', secondaryFiles: [{ pattern: ".tbi", required: false }, { pattern: ".csi", required: false }], doc: "Input vcf to annotate and soft filter"}
   input_tumor_name: string
   input_normal_name: string
   add_common_fields: {type: 'boolean', doc: "Set to true if input is a strelka2 vcf that hasn't had common fields added", default: false}
   bcftools_strip_columns: {type: 'string?', doc: "csv string of columns to strip if needed to avoid conflict, i.e INFO/AF"}
   bcftools_prefilter_csv: {type: 'string?', doc: "csv of bcftools filter params if you want to prefilter before annotation"}
+  bcftools_recontig_tsv: { type: 'File?', doc: "TSV file of old\tnew contigs, if needed"}
   disable_norm: {type: 'boolean?', doc: "Skip normalization step. Not recommended unless input is already normalized", default: false}
   disable_hotspot_annotation: {type: 'boolean?', doc: "Disable Hotspot Annotation and skip this task."}
   disable_vep_annotation: {type: 'boolean?', doc: "Disable VEP Annotation and skip this task.", default: false}
   echtvar_anno_zips: {type: 'File[]?', doc: "Annotation ZIP files for echtvar anno", "sbg:suggestedValue": [{class: File, path: 65c64d847dab7758206248c6,
         name: gnomad.v3.1.1.custom.echtvar.zip}]}
   bcftools_public_filter: {type: 'string?', doc: "Will hard filter final result to create a public version", default: FILTER="PASS"|INFO/HotSpotAllele=1}
-  gatk_filter_name: {type: 'string[]', doc: "Array of names for each filter tag to add"}
-  gatk_filter_expression: {type: 'string[]', doc: "Array of filter expressions to establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration
+  gatk_filter_name: {type: 'string[]?', doc: "Array of names for each filter tag to add"}
+  gatk_filter_expression: {type: 'string[]?', doc: "Array of filter expressions to establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration
       for clues"}
   vep_ram: {type: 'int?', default: 32, doc: "In GB, may need to increase this value depending on the size/complexity of input"}
   vep_cores: {type: 'int?', default: 16, doc: "Number of cores to use. May need to increase for really large inputs"}
@@ -154,13 +155,24 @@ steps:
       include_expression: bcftools_prefilter_csv
       output_basename: output_basename
     out: [filtered_vcf]
+  bcftools_recontig_vcf:
+    when: $(inputs.chr_rename_tsv != null)
+    run: ../tools/bcftools_annotate_rename_chr.cwl
+    in:
+      input_vcf:
+        source: [prefilter_vcf/filtered_vcf, input_vcf]
+        pickValue: first_non_null
+      chr_rename_tsv: bcftools_recontig_tsv
+      output_basename: output_basename
+      tool_name: tool_name
+    out: [bcftools_recontig_vcf]
   normalize_vcf:
     when: $(inputs.disable_norm == false)
     run: ../tools/normalize_vcf.cwl
     in:
       indexed_reference_fasta: indexed_reference_fasta
       input_vcf:
-        source: [prefilter_vcf/filtered_vcf, input_vcf]
+        source: [bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
       tool_name: tool_name
@@ -171,7 +183,7 @@ steps:
     run: ../tools/bcftools_strip_ann.cwl
     in:
       input_vcf:
-        source: [normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
       tool_name: tool_name
@@ -182,7 +194,7 @@ steps:
     when: $(inputs.run_tool_flag)
     in:
       strelka2_vcf:
-        source: [bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       run_tool_flag: add_common_fields
       tumor_name: input_tumor_name
@@ -199,7 +211,7 @@ steps:
       ram: vep_ram
       buffer_size: vep_buffer_size
       input_vcf:
-        source: [add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf,
+        source: [add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf,
           input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
@@ -220,7 +232,7 @@ steps:
     in:
       input_vcf:
         source: [vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf,
-          prefilter_vcf/filtered_vcf, input_vcf]
+          bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       echtvar_zips: echtvar_anno_zips
       tbi:
@@ -236,7 +248,7 @@ steps:
     in:
       input_vcf:
         source: [echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf,
-          normalize_vcf/normalized_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+          normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       reference: indexed_reference_fasta
       filter_name: gatk_filter_name
