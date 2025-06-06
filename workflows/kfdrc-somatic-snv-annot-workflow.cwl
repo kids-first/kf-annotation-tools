@@ -47,8 +47,12 @@ doc: |
    - `bcftools_public_filter`: 
      - DGD nexus export: `FILTER="OK;clinicalReported"|FILTER="clinicalReported"`
      - All others: `FILTER="PASS"|INFO/HotSpotAllele=1`
-   - `gatk_filter_name`: ["NORM_DP_LOW", "GNOMAD_AF_HIGH"] # _Leave null for DGD nexus export_
-   - `gatk_filter_expression`: [`vc.getGenotype('insert_normal_sample_name').getDP() <= 7`, `gnomad_3_1_1_AF != '.' && gnomad_3_1_1_AF > 0.001 && gnomad_3_1_1_FILTER=='PASS'`] # NOTE!! Replace `insert_normal_sample_name` with the value you'd use for `input_normal_name`! # NOTE!! If your annotation includes dot values, those values must first be excluded! If they are not, GATK will error trying to convert those values!  # _Leave null for DGD nexus export_
+   - `gatk_filter_name`:
+    - DGD nexus export: null
+    - All others: ["NORM_DP_LOW", "GNOMAD_AF_HIGH"]
+   - `gatk_filter_expression`:
+     - DGD nexus export: null
+     - All others: [`vc.getGenotype('insert_normal_sample_name').getDP() <= 7`, `gnomad_3_1_1_AF != '.' && gnomad_3_1_1_AF > 0.001 && gnomad_3_1_1_FILTER=='PASS'`] # NOTE!! Replace `insert_normal_sample_name` with the value you'd use for `input_normal_name`! # NOTE!! If your annotation includes dot values, those values must first be excluded! If they are not, GATK will error trying to convert those values!
    - `vep_cache`: `homo_sapiens_merged_vep_105_indexed_GRCh38.tar.gz`
    - `genomic_hotspots`: `tert.bed` # This file has two common TERT promoter gene hot spots
    - `protein_snv_hotspots`: `kfdrc_protein_snv_cancer_hotspots_20240718.txt` #  Column-name-containing, tab-delimited file(s) containing protein names and amino acid positions corresponding to hotspots. File header contains generation history
@@ -60,8 +64,8 @@ doc: |
    - `add_common_fields`
      - Strelka2 calls: `true`, *exception if already run previously and other downstream tools are being run*
      - All others: `false`
-   - `bcftools_recontig_tsv`: DGD nexus export: For inputs with chr stripped, provide TSV with old\tnew contigs
-   - `bcftools_prefilter_csv`: FILTER="OK;clinicalReported"|FILTER="OK"|FILTER="clinicalReported" # _DGD nexus export ONLY_
+   - `bcftools_recontig_tsv`: _DGD nexus export ONLY_: For inputs with chr stripped, provide TSV with `old\tnew` contigs
+   - `bcftools_prefilter_csv`: _DGD nexus export ONLY_: `FILTER="OK;clinicalReported"|FILTER="OK"|FILTER="clinicalReported"`
    - `retain_info` # This is fairly subjective, some useful columns unique from each caller to carry over from VCF to MAF
      - Strelka2:
         ```
@@ -89,7 +93,7 @@ doc: |
        ```
    - `retain_ann` # Similar to above, if run for KF harmonization, recommend the following:
      - ALL: `HGVSg`
-  ns` # if reannotating an old file:
+  - `bcftools_strip_columns` # if reannotating an old file:
      - `FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/CSQ,INFO/HotSpotAllele` # recommended if re-annotating from an older VEP cache
      - `FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/HotSpotAllele` # recommended if repeating hot spot and want to keep VEP
    - `bcftools_prefilter_csv` # if annotating a file with calls you want screen for, use this. i.e `FILTER="PASS"`
@@ -103,8 +107,12 @@ doc: |
      - `VarDict Java`: `vardict_somatic`
      - `consensus`: `consensus_somatic`
      - `DGD nexus export`: `dgd_nexus`
-   - `vep_cores`: `16` # `8` for DGD nexus export
-   - `vep_ram`: `32` # `8` for DGD nexus export
+   - `vep_cores`: 
+     - DGD nexus export: `8`
+     - Otherwise: `16`
+   - `vep_ram`: 
+     - DGD nexus export: `8`
+     - Otherwise: `32`
    - `vep_buffer`: `5000`
 
   ## Workflow outputs
