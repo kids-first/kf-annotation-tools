@@ -1,7 +1,7 @@
 cwlVersion: v1.2
 class: CommandLineTool
-id: bcftools_annotate_vcf
-doc: "Simple tool to annotate a vcf using bcftools and an annotation vcf"
+id: bcftools_annotate_rename_chr
+doc: "Simple tool to annotate rename contigs in a VCF with a TSV old\tnew file"
 requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
