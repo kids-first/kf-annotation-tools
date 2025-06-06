@@ -11,18 +11,21 @@ requirements:
   - class: DockerRequirement
     dockerPull: 'pgc-images.sbgenomics.com/d3b-bixu/gatk:4.1.1.0'
 
-baseCommand: [/gatk, VariantFiltration]
+baseCommand: []
 arguments:
   - position: 0
     shellQuote: false
     valueFrom: >-
+      $(inputs.filter_name == null || inputs.filter_expression == null ? ">&2 echo 'Missing filter info, skipping' && exit 0;" : ">&2 /gatk VariantFiltration")
       -O $(inputs.output_basename).$(inputs.tool_name).gatk.soft_filtered.vcf.gz
       ${
-        var args = "";
-        for (var i = 0; i < inputs.filter_name.length; i++){
-          args += "--filter-name \"" + inputs.filter_name[i] + "\" --filter-expression \"" + inputs.filter_expression[i] + "\" ";
+        if (inputs.filter_name != null || inputs.filter_expression != null){
+          var args = "";
+          for (var i = 0; i < inputs.filter_name.length; i++){
+            args += "--filter-name \"" + inputs.filter_name[i] + "\" --filter-expression \"" + inputs.filter_expression[i] + "\" ";
+          }
         }
-        return args
+        return args;
       }
 
 inputs:
@@ -30,8 +33,8 @@ inputs:
       inputBinding: { position: 0, prefix: "-V" } }
     reference: { type: 'File', secondaryFiles: [^.dict, .fai],
       inputBinding: { position: 0, prefix: "-R"} }
-    filter_name: {type: 'string[]', doc: "Array of names for each filter tag to add"}
-    filter_expression: {type: 'string[]', doc: "Array of filter expressions to establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration for clues"}
+    filter_name: {type: 'string[]?', doc: "Array of names for each filter tag to add"}
+    filter_expression: {type: 'string[]?', doc: "Array of filter expressions to establish criteria to tag variants with. See https://gatk.broadinstitute.org/hc/en-us/articles/360036730071-VariantFiltration for clues"}
     threads: {type: 'int?', doc: "Number of compression/decompression threads", default: 4}
     output_basename: string
     tool_name: string
@@ -41,4 +44,5 @@ outputs:
     type: File
     outputBinding:
       glob: '*.vcf.gz'
+      outputEval: '$(inputs.filter_name == null || inputs.filter_expression == null ? inputs.input_vcf : self)'
     secondaryFiles: ['.tbi']
