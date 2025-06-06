@@ -98,8 +98,8 @@ ns` # if reannotating an old file:
    - `VarDict Java`: `vardict_somatic`
    - `consensus`: `consensus_somatic`
    - `DGD nexus export`: `dgd_nexus`
- - `vep_cores`: `16`
- - `vep_ram`: `32`
+ - `vep_cores`: `16` # `8` for DGD nexus export
+ - `vep_ram`: `32` # `8` for DGD nexus export
  - `vep_buffer`: `5000`
 
 ## Workflow outputs
