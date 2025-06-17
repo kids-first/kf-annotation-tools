@@ -37,11 +37,11 @@ arguments:
     --exomiser.$(inputs.exomiser_genome).data-version="$(inputs.exomiser_version)"
     --exomiser.phenotype.data-version="$(inputs.exomiser_version)"
 inputs:
-  datadir_file: { type: "File", doc: "where data is to be downloaded and worked on" }
+  datadir_file: { type: "File", doc: "TAR file containing a properly formatted data directory for Exomiser." }
   vcf_file: { type: "File", secondaryFiles: [{pattern: '.tbi', required: true}], inputBinding: {prefix: "--vcf", position: 11}, doc: "Input VCF file to Exomise." }
   pheno_file: { type: "File", inputBinding: {prefix: "--sample", position: 11}, doc: "Sample file." }
   analysis_file: { type: "File", inputBinding: {prefix: "--analysis", position: 11}, doc: "Analysis file." }
-  exomiser_genome: { type: "string?", default: "hg38", inputBinding: {prefix: "--assembly", position: 11}, doc: "Genome version used to generate input VCF. Accepted values are hg38 or hg19." }
+  exomiser_genome: { type: "string?", default: "hg38", inputBinding: {prefix: "--assembly", position: 11}, doc: "Genome version used to generate input VCF. This value should match one of subdirectories in the data directory." }
   output_basename: { type: "string?", default: "test.exomiser", inputBinding: {prefix: "--output-filename=", separate: false, position: 12}, doc: "String to use as basename for output files." }
   output_format: { type: "string?", default: "HTML,JSON,TSV_GENE,TSV_VARIANT,VCF", inputBinding: {prefix: "--output-format=", separate: false, position: 12}, doc: "Comma-separated list of formats to output" }
   extra_args: { type: "string?", inputBinding: {position: 13}, doc: "Any extra arguments for this task." }
@@ -50,7 +50,7 @@ inputs:
   remm_filename: { type: "string?", doc: "File to use for REMM annnotation. File must exist in the data_dir" }
   remm_version: { type: "string?", doc: "If using REMM, what version?" }
   cadd_snvname: { type: "string?", doc: "Filename to use for CADD SNVs. File must exist in the data_dir" }
-  cadd_indelname: { type: "string?", doc: "Filename to use for CADD indels. File must existin in the data_dir" }
+  cadd_indelname: { type: "string?", doc: "Filename to use for CADD indels. File must exist in in the data_dir" }
   cadd_version: { type: "string?", doc: "If using CADD, what version?" }
   application_args: { type: "string?", inputBinding: {position: 16}, doc: "Any extra application arguments for this task." }
   cpu: { type: 'int?', default: 6, doc: "CPUs to allocate to this task." }
