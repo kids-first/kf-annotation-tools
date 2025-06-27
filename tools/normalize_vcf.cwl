@@ -1,7 +1,18 @@
 cwlVersion: v1.2
 class: CommandLineTool
 id: normalize_vcf
-doc: "Before consensus calling, left align indel calls, break up multi-allelic calls, but leave mnps intact"
+doc: |
+  This tool follows the bcbio approach to VCF normalization detailed here:
+  https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/variation/normalize.py.
+  Only steps 1 and 3 are performed.
+
+  This tool does the following:
+  - Optionally, remove annotations from the input VCF
+  - Split multiallelic SNPs and INDELs using bcftools norm (left-alignment and normalization are not run when --fasta-ref is omitted)
+  - INDELs are left aligned and normalized using vt normalize
+  - Compress the VCF using bgzip
+  - Index the VCF.GZ using tabix
+
 requirements:
   - class: ShellCommandRequirement
   - class: InlineJavascriptRequirement
