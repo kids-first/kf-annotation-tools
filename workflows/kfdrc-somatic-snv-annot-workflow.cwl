@@ -149,6 +149,8 @@ inputs:
   vep_buffer_size: {type: 'int?', default: 1000, doc: "Increase or decrease to balance speed and memory usage"}
   vep_cache: {type: 'File?', doc: "tar gzipped cache from ensembl/local converted cache", "sbg:suggestedValue": {class: File, path: 6332f8e47535110eb79c794f,
       name: homo_sapiens_merged_vep_105_indexed_GRCh38.tar.gz}}
+  vep_extra_args: { type: 'string?', doc: "Extra arguments for VEP", default: "--mane --mane_select" }
+  vep_fields: "Allele,Consequence,IMPACT,SYMBOL,Feature_type,Gene,PICK,Feature,EXON,BIOTYPE,INTRON,HGVSc,HGVSp,STRAND,CDS_position,cDNA_position,Protein_position,Amino_acids,Codons,VARIANT_CLASS,HGVSg,CANONICAL,RefSeq,MANE,MANE_SELECT,MANE_PLUS"
   dbnsfp: {type: 'File?', secondaryFiles: [.tbi, ^.readme.txt], doc: "VEP-formatted plugin file, index, and readme file containing
       dbNSFP annotations"}
   dbnsfp_fields: {type: 'string?', doc: "csv string with desired fields to annotate. Use ALL to grab all"}
@@ -197,9 +199,9 @@ steps:
     out: [bcftools_recontig_vcf]
   normalize_vcf:
     when: $(inputs.disable_norm == false)
-    run: ../tools/normalize_vcf.cwl
+    run: ../tools/bcftools_norm.cwl
     in:
-      indexed_reference_fasta: indexed_reference_fasta
+      fasta: indexed_reference_fasta
       input_vcf:
         source: [bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
@@ -251,10 +253,12 @@ steps:
       run_cache_existing: run_cache_existing
       run_cache_af: run_cache_af
       run_stats: run_stats
+      fields: vep_fields
       cadd_indels: cadd_indels
       cadd_snvs: cadd_snvs
       dbnsfp: dbnsfp
       dbnsfp_fields: dbnsfp_fields
+      extra_args: vep_extra_args
     out: [output_vcf]
   echtvar_anno_gnomad:
     when: $(inputs.echtvar_zips != null)

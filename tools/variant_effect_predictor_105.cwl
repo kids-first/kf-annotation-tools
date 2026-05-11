@@ -149,6 +149,8 @@ inputs:
     fields is written in the VCF header. Output fields in the 'CSQ' INFO field can be selected by using --fields.If the input format was VCF, the file will remain unchanged save for the addition of the CSQ 
     field (unless using any filtering)",
     default: true, inputBinding: { position: 1, prefix: "--vcf"} }
+  fields: { type: 'string?', doc: "Comma-separated list of consequence fields to include in the output. Use ALL to include all fields. By default, all fields are included when using --cache, and a basic set of fields is included when not using --cache",
+    inputBinding: { position: 1, prefix: "--fields"} }
   assembly: { type: 'string?', doc: "Select the assembly version to use if more than one available. If using the cache, you must have the appropriate assembly's cache file installed. If not specified and you have only 1 assembly version installed, this will be chosen by default", default: "GRCh38",
     inputBinding: { position: 1, prefix: "--assembly"} }
   domains: { type: 'boolean?', doc: "Adds names of overlapping protein domains to output. Not used by default", default: true,
