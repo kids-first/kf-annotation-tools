@@ -1,7 +1,7 @@
 cwlVersion: v1.2
 class: CommandLineTool
 id: bcftools_filter_vcf
-doc: "More generic tool to take in an include expression and optionally an exclude expresssion to filter a vcf"
+doc: "More generic tool to take in an include expression and optionally an exclude expression to filter a vcf"
 requirements:
   - class: ShellCommandRequirement
   - class: DockerRequirement
@@ -32,7 +32,7 @@ requirements:
               $(inputs.filter_expression == null ? "" : "-f " + inputs.filter_expression)
           if [[ $(inputs.output_type) == z ]]
           then
-            tabix $(inputs.output_basename).bcf_filtered.vcf.gz
+            tabix --threads $(inputs.threads) $(inputs.output_basename).bcf_filtered.vcf.gz
           fi
 
 baseCommand: []

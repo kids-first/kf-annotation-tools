@@ -26,12 +26,12 @@ arguments:
 inputs:
   input_vcf: { type: File, inputBinding: { position: 10 } }
   threads: { type: 'int?', default: 4, inputBinding: { position: 1, prefix: "--threads" } }
-  output_type: { type: [ 'null', {type: enum, name: output_type, symbols: [ "u", "b", "v", "z"]}], default: "z". inputBinding: { position: 1, prefix: "-O" } }
+  output_type: { type: [ 'null', {type: enum, name: output_type, symbols: [ "u", "b", "v", "z"]}], default: "z", inputBinding: { position: 1, prefix: "-O" } }
   fasta: { type: File, inputBinding: { position: 1, prefix: "-f" } }
   output_basename: string
   tool_name: string
 outputs:
-  filtered_vcf:
+  normalized_vcf:
     type: File
     outputBinding:
       glob: "*.{v,b}cf{,.gz}"

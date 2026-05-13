@@ -150,16 +150,11 @@ inputs:
   vep_cache: {type: 'File?', doc: "tar gzipped cache from ensembl/local converted cache", "sbg:suggestedValue": {class: File, path: 6332f8e47535110eb79c794f,
       name: homo_sapiens_merged_vep_105_indexed_GRCh38.tar.gz}}
   vep_extra_args: { type: 'string?', doc: "Extra arguments for VEP", default: "--mane --mane_select" }
-  vep_fields: "Allele,Consequence,IMPACT,SYMBOL,Feature_type,Gene,PICK,Feature,EXON,BIOTYPE,INTRON,HGVSc,HGVSp,STRAND,CDS_position,cDNA_position,Protein_position,Amino_acids,Codons,VARIANT_CLASS,HGVSg,CANONICAL,RefSeq,MANE,MANE_SELECT,MANE_PLUS"
-  dbnsfp: {type: 'File?', secondaryFiles: [.tbi, ^.readme.txt], doc: "VEP-formatted plugin file, index, and readme file containing
-      dbNSFP annotations"}
-  dbnsfp_fields: {type: 'string?', doc: "csv string with desired fields to annotate. Use ALL to grab all"}
+  vep_pick_order: { type: 'string', doc: "PICK order to flag representative transcript. RADIANT preference is default", default: "rank,biotype,mane_select,mane_plus_clinical,canonical,appris,tsl,ccds,length,ensembl,refseq" }
   merged: {type: 'boolean?', doc: "Set to true if merged cache used", default: true}
   run_cache_existing: {type: 'boolean?', doc: "Run the check_existing flag for cache", default: true}
   run_cache_af: {type: 'boolean?', doc: "Run the allele frequency flags for cache", default: true}
   run_stats: {type: 'boolean?', doc: "Create stats file? Disable for speed", default: false}
-  cadd_indels: {type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file and index containing CADD indel annotations"}
-  cadd_snvs: {type: 'File?', secondaryFiles: [.tbi], doc: "VEP-formatted plugin file and index containing CADD SNV annotations"}
   genomic_hotspots: {type: 'File[]?', doc: "Tab-delimited BED formatted file(s) containing hg38 genomic positions corresponding to
       hotspots", "sbg:suggestedValue": [{class: File, path: 607713829360f10e3982a423, name: tert.bed}]}
   protein_snv_hotspots: {type: 'File[]?', doc: "Column-name-containing, tab-delimited file(s) containing protein names and amino acid
@@ -186,9 +181,9 @@ steps:
       include_expression: bcftools_prefilter_csv
       output_basename: output_basename
     out: [filtered_vcf]
-  bcftools_recontig_vcf:
-    when: $(inputs.chr_rename_tsv != null)
-    run: ../tools/bcftools_annotate_rename_chr.cwl
+  bcftools_cleanup_vcf:
+    when: $(inputs.chr_rename_tsv != null || inputs.bcftools_strip_columns != null)
+    run: ../tools/bcftools_annotate.cwl
     in:
       input_vcf:
         source: [prefilter_vcf/filtered_vcf, input_vcf]
@@ -196,36 +191,25 @@ steps:
       chr_rename_tsv: bcftools_recontig_tsv
       output_basename: output_basename
       tool_name: tool_name
-    out: [bcftools_recontig_vcf]
+    out: [bcftools_annotated_vcf]
   normalize_vcf:
     when: $(inputs.disable_norm == false)
     run: ../tools/bcftools_norm.cwl
     in:
       fasta: indexed_reference_fasta
       input_vcf:
-        source: [bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [bcftools_cleanup_vcf/bcftools_annotated_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
       tool_name: tool_name
       disable_norm: disable_norm
     out: [normalized_vcf]
-  bcftools_strip_info:
-    when: $(inputs.strip_info != null)
-    run: ../tools/bcftools_strip_ann.cwl
-    in:
-      input_vcf:
-        source: [normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
-        pickValue: first_non_null
-      output_basename: output_basename
-      tool_name: tool_name
-      strip_info: bcftools_strip_columns
-    out: [stripped_vcf]
   add_standard_fields:
     run: ../tools/add_strelka2_fields.cwl
     when: $(inputs.run_tool_flag)
     in:
       strelka2_vcf:
-        source: [bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf,
+        source: [normalize_vcf/normalized_vcf, bcftools_cleanup_vcf/bcftools_annotated_vcf, prefilter_vcf/filtered_vcf,
           input_vcf]
         pickValue: first_non_null
       run_tool_flag: add_common_fields
@@ -243,7 +227,7 @@ steps:
       ram: vep_ram
       buffer_size: vep_buffer_size
       input_vcf:
-        source: [add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf,
+        source: [add_standard_fields/output, normalize_vcf/normalized_vcf, bcftools_cleanup_vcf/bcftools_annotated_vcf,
           prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
@@ -253,11 +237,7 @@ steps:
       run_cache_existing: run_cache_existing
       run_cache_af: run_cache_af
       run_stats: run_stats
-      fields: vep_fields
-      cadd_indels: cadd_indels
-      cadd_snvs: cadd_snvs
-      dbnsfp: dbnsfp
-      dbnsfp_fields: dbnsfp_fields
+      pick_order: vep_pick_order
       extra_args: vep_extra_args
     out: [output_vcf]
   echtvar_anno_gnomad:
@@ -265,8 +245,8 @@ steps:
     run: ../tools/echtvar_anno.cwl
     in:
       input_vcf:
-        source: [vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf, normalize_vcf/normalized_vcf,
-          bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [vep_annotate_vcf/output_vcf, add_standard_fields/output, normalize_vcf/normalized_vcf,
+          bcftools_cleanup_vcf/bcftools_annotated_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       echtvar_zips: echtvar_anno_zips
       tbi:
@@ -281,8 +261,8 @@ steps:
     run: ../tools/gatk_variant_filter.cwl
     in:
       input_vcf:
-        source: [echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf, add_standard_fields/output, bcftools_strip_info/stripped_vcf,
-          normalize_vcf/normalized_vcf, bcftools_recontig_vcf/bcftools_recontig_vcf, prefilter_vcf/filtered_vcf, input_vcf]
+        source: [echtvar_anno_gnomad/annotated_vcf, vep_annotate_vcf/output_vcf, add_standard_fields/output,
+          normalize_vcf/normalized_vcf, bcftools_cleanup_vcf/bcftools_annotated_vcf, prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       reference: indexed_reference_fasta
       filter_name: gatk_filter_name
