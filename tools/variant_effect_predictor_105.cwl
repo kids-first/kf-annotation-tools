@@ -159,8 +159,10 @@ inputs:
     inputBinding: { position: 1, prefix: "--failed"} }
   pick_order: { type: 'string?', doc: "Customise the order of criteria (and the list of criteria) applied when choosing a block of annotation data with one of the following options: --pick, --pick_allele, --per_gene, --pick_allele_gene, --flag_pick, --flag_pick_allele, --flag_pick_allele_gene.",
     default: "canonical,tsl,biotype,rank,ccds,length", inputBinding: { position: 1, prefix: "--pick_order" } }
-  flag_pick_allele: { type: 'boolean?', doc: "As per --pick_allele, but adds the PICK flag to the chosen block of consequence data and retains others", default: true,
+  flag_pick_allele: { type: 'boolean?', doc: "As per --pick_allele, but adds the PICK flag to the chosen block of consequence data and retains others", default: false,
     inputBinding: {position: 2, prefix: "--flag_pick_allele" } }
+  flag_pick: { type: 'boolean?', doc: "As per --pick, but adds the PICK flag to the chosen block of consequence data and retains others", default: true,
+    inputBinding: {position: 2, prefix: "--flag_pick" } }
   protein: { type: 'boolean?', doc: "Add the Ensembl protein identifier to the output where appropriate", default: true,
     inputBinding: {position: 2, prefix: "--protein" } }
   gene_phenotype: { type: 'boolean?', doc: "Indicates if the overlapped gene is associated with a phenotype, disease or trait", default: true,

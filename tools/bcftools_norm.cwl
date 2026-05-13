@@ -21,7 +21,7 @@ arguments:
       --old-rec-tag OLD_RECORD
       -c w
       -m -any
-      -o $(inputs.output_basename).$(tool_name).vcf.gz
+      -o $(inputs.output_basename).$(inputs.tool_name).vcf.gz
 
 inputs:
   input_vcf: { type: File, inputBinding: { position: 10 } }
