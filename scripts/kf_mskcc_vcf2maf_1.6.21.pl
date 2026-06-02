@@ -172,11 +172,11 @@ sub GetBiotypePriority {
         'polymorphic_pseudogene' => 8, # Pseudogene owing to a SNP/DIP but in other individuals/haplotypes/strains the gene is translated
         'retrotransposed' => 8, # Pseudogene owing to a reverse transcribed and re-inserted sequence
         'translated_processed_pseudogene' => 8, # Pseudogenes that have mass spec data suggesting that they are also translated
-        'transcribed_pseudogene' => 8, # RefSeq version of this category
         'translated_unprocessed_pseudogene' => 8, # Pseudogenes that have mass spec data suggesting that they are also translated
         'transcribed_processed_pseudogene' => 8, # Pseudogene where protein homology or genomic structure indicates a pseudogene, but the presence of locus-specific transcripts indicates expression
         'transcribed_unprocessed_pseudogene' => 8, # Pseudogene where protein homology or genomic structure indicates a pseudogene, but the presence of locus-specific transcripts indicates expression
         'transcribed_unitary_pseudogene' => 8, #Pseudogene where protein homology or genomic structure indicates a pseudogene, but the presence of locus-specific transcripts indicates expression
+        'transcribed_pseudogene' => 8, # RefSeq version of this category
         'unitary_pseudogene' => 8, # A species specific unprocessed pseudogene without a parent gene, as it has an active orthologue in another species
         'unprocessed_pseudogene' => 8, # Pseudogene that can contain introns since produced by gene duplication
         'Mt_tRNA_pseudogene' => 8, # Non-coding RNAs predicted to be pseudogenes by the Ensembl pipeline
