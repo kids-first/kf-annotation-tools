@@ -165,7 +165,7 @@ inputs:
   tool_name: string
   retain_info: {type: 'string?', doc: "csv string with INFO fields that you want to keep, i.e. for consensus `MQ,MQ0,CAL,Hotspot`"}
   retain_fmt: {type: 'string?', doc: "csv string with FORMAT fields that you want to keep"}
-  retain_ann: {type: 'string?', doc: "csv string of annotations (within the VEP CSQ/ANN) to retain as extra columns in MAF"}
+  retain_ann: {type: 'string?', doc: "csv string of annotations (within the VEP CSQ/ANN) to retain as extra columns in MAF", default: "HGVSg,MANE_SELECT,MANE_PLUS_CLINICAL"}
   maf_center: {type: 'string?', doc: "Sequencing center of variant called", default: "."}
   custom_enst: {type: 'File?', doc: "Use a file with ens tx IDs for each gene to override VEP PICK", "sbg:suggestedValue": {class: File,
       path: 663d2bcc27374715fccd8c65, name: kf_isoform_override.tsv}}
