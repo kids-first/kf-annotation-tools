@@ -16,10 +16,6 @@ jobs:
         name: Checkout Repo
         with:
           ref: ${{ github.head_ref }}
-      - id: make-germline-table
-        name: Make Docker Table for Germline Workflow
-        run: |
-          python .github/scripts/workflow_to_docker_table.py --output_file docs/dockers_consensus.md workflows/kfdrc-germline-snv-annot-workflow.cwl
       - id: make-somatic-table
         name: Make Docker Table for Somatic Workflow
         run: |

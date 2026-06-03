@@ -11,5 +11,5 @@ This design allows for less code maintenance and greater ease of use.
 ## Annotation Workflows
 
 Additional documentation is available for our annotation workflows:
-- [Germline SNV Annotation](./docs/GERMLINE_SNV_ANNOT_README.md)
+- Germline SNV Annotation: **Deprecated**, see [D3b RADIANT Annotation](https://github.com/d3b-center/D3b-RADIANT-Annotation)
 - [Somatic SNV Annotation](./docs/SOMATIC_SNV_ANNOT_README.md)
