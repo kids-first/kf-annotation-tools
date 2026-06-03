@@ -6,10 +6,13 @@ Annotation of variant calls helps give context to the possible biological conseq
 
 It does the following things as described below:
 
-1. Normalize VCF
+1. Prefilter VCF if needed
 1. Strip specified `INFO` and `FORMAT` fields (Only if adding a new annotation that clashes with existing)
+ - Can also annotate with a VCF if desired
+1. Normalize VCF
+1. Add standard fields (typically for Strelka2)
 1. Annotate with VEP - can be skipped if VEP run previously and downstream tools are to be repeated
-1. Annotated with an additional vcf - optional, recommend using a gnomAD VCF with at least AF
+1. Annotate using echtvar -  recommend using a gnomAD ref with at least AF
 1. Soft filter on remarkable variant characteristics
    - KF recommends normal read depth <= 7 and gnomAD AF > 0.001 and gnomAD FILTER == PASS
    - This output will be considered `protected`
@@ -17,8 +20,6 @@ It does the following things as described below:
 1. Create MAF output using a modified version of MSKCC's vcf2maf
 1. Hard filter on vcf based on user-specified criteria - this output would be considered `public`
 1. Create MAF output based on `public` vcf
-
-![annot workflow flowchart](../docs/somatic_annotation_wf.png)
 
 ## Workflow Description and KF Recommended Inputs
 The additional gnomAD annotation, hotspot annotation, and soft + hard filtering are part of process called "Germline Masking."
@@ -53,6 +54,8 @@ Secondary files needed for each reference file will be a sub-bullet point
  - `protein_snv_hotspots`: `kfdrc_protein_snv_cancer_hotspots_20240718.txt` #  Column-name-containing, tab-delimited file(s) containing protein names and amino acid positions corresponding to hotspots. File header contains generation history
  - `protein_indel_hotspots`: `protein_indel_cancer_hotspots_v2.ENS105_liftover.tsv` # A tsv formatted INDEL subset of https://www.cancerhotspots.org/files/hotspots_v2.xls
  - `custom_enst`: `kf_isoform_override.tsv` # As of VEP 104, several genes have had their canonical transcripts redefined. While the VCF will have all possible isoforms, this affects maf file output and may results in representative protein changes that defy historical expectations
+ - `vep_extra_args`: `--mane --mane_select` # allow for added args for VEP. Recommended ading MANE annotation
+ - `vep_pick_order`: `rank,biotype,mane,canonical,appris,tsl,ccds,length,ensembl,refseq` # recommended by RADIANT
 
 ### Source-specific inputs
 For each input, the sub-bullet refers to when to use the suggested input
@@ -87,7 +90,7 @@ For each input, the sub-bullet refers to when to use the suggested input
      gnomad_3_1_1_AC,gnomad_3_1_1_AN,gnomad_3_1_1_AF,gnomad_3_1_1_nhomalt,gnomad_3_1_1_AC_popmax,gnomad_3_1_1_AN_popmax,gnomad_3_1_1_AF_popmax,gnomad_3_1_1_nhomalt_popmax,gnomad_3_1_1_AC_controls_and_biobanks,gnomad_3_1_1_AN_controls_and_biobanks,gnomad_3_1_1_AF_controls_and_biobanks,gnomad_3_1_1_AF_non_cancer,gnomad_3_1_1_primate_ai_score,gnomad_3_1_1_splice_ai_consequence,gnomad_3_1_1_AF_non_cancer_afr,gnomad_3_1_1_AF_non_cancer_ami,gnomad_3_1_1_AF_non_cancer_asj,gnomad_3_1_1_AF_non_cancer_eas,gnomad_3_1_1_AF_non_cancer_fin,gnomad_3_1_1_AF_non_cancer_mid,gnomad_3_1_1_AF_non_cancer_nfe,gnomad_3_1_1_AF_non_cancer_oth,gnomad_3_1_1_AF_non_cancer_raw,gnomad_3_1_1_AF_non_cancer_sas,gnomad_3_1_1_AF_non_cancer_amr,gnomad_3_1_1_AF_non_cancer_popmax,gnomad_3_1_1_AF_non_cancer_all_popmax,gnomad_3_1_1_FILTER,Classification,GenomicSource,ClinicallyReported,ManuallyEntered,Correlation,HotSpotAllele
      ```
  - `retain_ann` # Similar to above, if run for KF harmonization, recommend the following:
-   - ALL: `HGVSg`
+   - ALL: `HGVSg,MANE_SELECT,MANE_PLUS_CLINICAL`
 - `bcftools_strip_columns` # if reannotating an old file:
    - `FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/CSQ,INFO/HotSpotAllele` # recommended if re-annotating from an older VEP cache
    - `FILTER/GNOMAD_AF_HIGH,FILTER/NORM_DP_LOW,INFO/HotSpotAllele` # recommended if repeating hot spot and want to keep VEP
