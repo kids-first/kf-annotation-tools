@@ -60,6 +60,9 @@ sub GetEffectPriority {
         'rare_amino_acid_variant' => 6, # A sequence variant whereby at least one base of a codon encoding a rare amino acid is changed, resulting in a different encoded amino acid
         'transcript_amplification' => 7, # A feature amplification of a region containing a transcript
         'splice_region_variant' => 8, # A sequence variant in which a change has occurred within the region of the splice site, either within 1-3 bases of the exon or 3-8 bases of the intron
+        'splice_donor_5th_base_variant' => 8, # A sequence variant that causes a change at the 5th base pair after the start of the intron in the orientation of the transcript
+        'splice_donor_region_variant' => 8, # A sequence variant that falls in the region between the 3rd and 6th base after splice junction (5' end of intron)
+        'splice_polypyrimidine_tract_variant' => 8, # A sequence variant that falls in the polypyrimidine tract at 3' end of intron between 17 and 3 bases from the end (acceptor -3 to acceptor -17)
         'start_retained_variant' => 9, # A sequence variant where at least one base in the start codon is changed, but the start remains
         'stop_retained_variant' => 9, # A sequence variant where at least one base in the terminator codon is changed, but the terminator remains
         'synonymous_variant' => 9, # A sequence variant where there is no resulting change to the encoded amino acid
@@ -124,6 +127,7 @@ sub GetBiotypePriority {
         'tRNA' => 3, #Added by Y. Boursin
         'sRNA' => 3, # Non-coding RNA predicted using sequences from RFAM and miRBase
         'scaRNA' => 3, # Non-coding RNA predicted using sequences from RFAM and miRBase
+        'guide_RNA' => 3, # from RefSeq, scaRNA
         'rRNA' => 3, # Non-coding RNA predicted using sequences from RFAM and miRBase
         'scRNA' => 3, # Non-coding RNA predicted using sequences from Rfam and miRBase
         'lincRNA' => 3, # Long, intervening noncoding (linc) RNAs, that can be found in evolutionarily conserved, intergenic regions
@@ -132,9 +136,14 @@ sub GetBiotypePriority {
         'bidirectional_promoter_lncRNA' => 3, # A non-coding locus that originates from within the promoter region of a protein-coding gene, with transcription proceeding in the opposite direction on the other strand
         'known_ncrna' => 4,
         'vaultRNA' => 4, # Short non coding RNA genes that form part of the vault ribonucleoprotein complex
+        'vault_RNA' => 4, # Same as written for RefSeq
         'macro_lncRNA' => 4, # unspliced lncRNAs that are several kb in size
         'Mt_tRNA' => 4, # Non-coding RNA predicted using sequences from RFAM and miRBase
         'Mt_rRNA' => 4, # Non-coding RNA predicted using sequences from RFAM and miRBase
+        'RNase_MRP_RNA' => 4, # Type of ncRNA found in RefSeq
+        'RNase_P_RNA' => 4, # Type of ncRNA found in RefSeq
+        'Y_RNA' => 4, # Type of ncRNA found in RefSeq
+        'telomerase_RNA' => 4, # Type of ncRNA found in RefSeq
         'antisense' => 5, # Has transcripts that overlap the genomic span (i.e. exon or introns) of a protein-coding locus on the opposite strand
         'antisense_RNA' => 5, # Alias for antisense (Y. Boursin)
         'sense_intronic' => 5, # Long non-coding transcript in introns of a coding gene that does not overlap any exons
@@ -143,6 +152,7 @@ sub GetBiotypePriority {
         '3prime_overlapping_ncRNA' => 5, # Transcripts where ditag and/or published experimental data strongly supports the existence of short non-coding transcripts transcribed from the 3'UTR
         'misc_RNA' => 5, # Non-coding RNA predicted using sequences from RFAM and miRBase
         'non_coding' => 5, # Transcript which is known from the literature to not be protein coding
+        'ncRNA' => 5, #same but from RefSeq
         'regulatory_region' => 6, # A region of sequence that is involved in the control of a biological process
         'disrupted_domain' => 6, # Otherwise viable coding region omitted from this alternatively spliced transcript because the splice variation affects a region coding for a protein domain
         'processed_transcript' => 6, # Doesn't contain an ORF
@@ -166,6 +176,7 @@ sub GetBiotypePriority {
         'transcribed_processed_pseudogene' => 8, # Pseudogene where protein homology or genomic structure indicates a pseudogene, but the presence of locus-specific transcripts indicates expression
         'transcribed_unprocessed_pseudogene' => 8, # Pseudogene where protein homology or genomic structure indicates a pseudogene, but the presence of locus-specific transcripts indicates expression
         'transcribed_unitary_pseudogene' => 8, #Pseudogene where protein homology or genomic structure indicates a pseudogene, but the presence of locus-specific transcripts indicates expression
+        'transcribed_pseudogene' => 8, # RefSeq version of this category
         'unitary_pseudogene' => 8, # A species specific unprocessed pseudogene without a parent gene, as it has an active orthologue in another species
         'unprocessed_pseudogene' => 8, # Pseudogene that can contain introns since produced by gene duplication
         'Mt_tRNA_pseudogene' => 8, # Non-coding RNAs predicted to be pseudogenes by the Ensembl pipeline
@@ -174,12 +185,14 @@ sub GetBiotypePriority {
         'snRNA_pseudogene' => 8, # Non-coding RNAs predicted to be pseudogenes by the Ensembl pipeline
         'scRNA_pseudogene' => 8, # Non-coding RNAs predicted to be pseudogenes by the Ensembl pipeline
         'rRNA_pseudogene' => 8, # Non-coding RNAs predicted to be pseudogenes by the Ensembl pipeline
+        'ncRNA_pseudogene' => 8, # ncRNA pseudogene from RefSeq
         'misc_RNA_pseudogene' => 8, # Non-coding RNAs predicted to be pseudogenes by the Ensembl pipeline
         'miRNA_pseudogene' => 8, # Non-coding RNAs predicted to be pseudogenes by the Ensembl pipeline
         'IG_C_pseudogene' => 8, # Inactivated immunoglobulin gene
         'IG_D_pseudogene' => 8, # Inactivated immunoglobulin gene
         'IG_J_pseudogene' => 8, # Inactivated immunoglobulin gene
         'IG_V_pseudogene' => 8, # Inactivated immunoglobulin gene
+        'IG_pseudogene' => 8, # Inactivated immunoglobulin gene
         'TR_J_pseudogene' => 8, # Inactivated immunoglobulin gene
         'TR_V_pseudogene' => 8, # Inactivated immunoglobulin gene
         'artifact' => 9, # Used to tag mistakes in the public databases (Ensembl/SwissProt/Trembl)
