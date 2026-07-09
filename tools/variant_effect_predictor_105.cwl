@@ -145,7 +145,7 @@ inputs:
     inputBinding: { position: 0, prefix: "--fork" } }
   buffer_size: {type: 'int?', doc: "Increase or decrease to balance speed and memory usage", default: 5000,
     inputBinding: { position: 0, prefix: "--buffer_size"} }
-  out_vcf_flag: { type: 'boolean?', doc: " Writes output in VCF format. Consequences are added in the INFO field of the VCF file, using the key 'CSQ'. Data fields are encoded separated by '|'; the order of
+  out_vcf_flag: { type: 'boolean?', doc: "Writes output in VCF format. Consequences are added in the INFO field of the VCF file, using the key 'CSQ'. Data fields are encoded separated by '|'; the order of
     fields is written in the VCF header. Output fields in the 'CSQ' INFO field can be selected by using --fields.If the input format was VCF, the file will remain unchanged save for the addition of the CSQ 
     field (unless using any filtering)",
     default: true, inputBinding: { position: 1, prefix: "--vcf"} }
@@ -158,7 +158,7 @@ inputs:
   failed: { type: ['null', {type: enum, name: failed, symbols: ["0", "1"]}], doc: "When checking for co-located variants, by default VEP will exclude variants that have been flagged as failed. Set this flag to include such variants. 0 is exclude", default: 1,
     inputBinding: { position: 1, prefix: "--failed"} }
   pick_order: { type: 'string?', doc: "Customise the order of criteria (and the list of criteria) applied when choosing a block of annotation data with one of the following options: --pick, --pick_allele, --per_gene, --pick_allele_gene, --flag_pick, --flag_pick_allele, --flag_pick_allele_gene.",
-    default: "canonical,tsl,biotype,rank,ccds,length", inputBinding: { position: 1, prefix: "--pick_order" } }
+    default: "rank,biotype,mane,canonical,appris,tsl,ccds,length,ensembl,refseq", inputBinding: { position: 1, prefix: "--pick_order" } }
   flag_pick_allele: { type: 'boolean?', doc: "As per --pick_allele, but adds the PICK flag to the chosen block of consequence data and retains others", default: false,
     inputBinding: {position: 2, prefix: "--flag_pick_allele" } }
   flag_pick: { type: 'boolean?', doc: "As per --pick, but adds the PICK flag to the chosen block of consequence data and retains others", default: true,
@@ -193,12 +193,16 @@ inputs:
     inputBinding: {position: 2, prefix: "--ccds" } }
   uniprot: { type: 'boolean?', doc: "Adds best match accessions for translated protein products from three UniProt-related databases (SWISSPROT, TREMBL and UniParc) to the output", default: true,
     inputBinding: {position: 2, prefix: "--uniprot" } }
+  appris: { type: 'boolean?', doc: "Adds the APPRIS isoform annotation for this transcript to the output", default: true,
+    inputBinding: {position: 2, prefix: "--appris" } }
   symbol: { type: 'boolean?', doc: "Adds the gene symbol (e.g. HGNC) (where available) to the output. Some gene symbol, e.g. HGNC, are only available in merged cache and therefore should be used with --merged option while using cache to get result.", default: true,
     inputBinding: {position: 2, prefix: "--symbol" } }
   numbers: { type: 'boolean?', doc: "Adds affected exon and intron numbering to to output. Format is Number/Total.", default: true,
     inputBinding: {position: 2, prefix: "--numbers" } }
   canonical: { type: 'boolean?', doc: "Adds a flag indicating if the transcript is the canonical transcript for the gene.", default: true,
     inputBinding: {position: 2, prefix: "--canonical" } }
+  mane: { type: 'boolean?', doc: "Adds a flag indicating if the transcript is the MANE Select or MANE Plus Clinical transcript for the gene.", default: true,
+    inputBinding: {position: 2, prefix: "--mane" } }
   allele_number: { type: 'boolean?', doc: "Identify allele number from VCF input, where 1 = first ALT allele, 2 = second ALT allele etc. Useful when using --minimal.", default: true,
     inputBinding: {position: 2, prefix: "--allele_number" } }
   dont_skip: { type: 'boolean?', doc: "Don't skip input variants that fail validation, e.g. those that fall on unrecognised sequences. Combining --check_ref with --dont_skip will add a CHECK_REF output field when the given reference does not match the underlying reference sequence.", default: true,
