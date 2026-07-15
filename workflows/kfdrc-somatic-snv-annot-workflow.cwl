@@ -236,6 +236,10 @@ steps:
           prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
+      output_file:
+        source: [output_basename, tool_name]
+        valueFrom: |
+          $(self[0]).$(self[1]).vep_annotated.vcf.gz
       tool_name: tool_name
       cache: vep_cache
       merged: merged

@@ -54,7 +54,6 @@ Secondary files needed for each reference file will be a sub-bullet point
  - `protein_snv_hotspots`: `kfdrc_protein_snv_cancer_hotspots_20240718.txt` #  Column-name-containing, tab-delimited file(s) containing protein names and amino acid positions corresponding to hotspots. File header contains generation history
  - `protein_indel_hotspots`: `protein_indel_cancer_hotspots_v2.ENS105_liftover.tsv` # A tsv formatted INDEL subset of https://www.cancerhotspots.org/files/hotspots_v2.xls
  - `custom_enst`: `kf_isoform_override.tsv` # As of VEP 104, several genes have had their canonical transcripts redefined. While the VCF will have all possible isoforms, this affects maf file output and may results in representative protein changes that defy historical expectations
- - `vep_extra_args`: `--mane --mane_select` # allow for added args for VEP. Recommended ading MANE annotation
  - `vep_pick_order`: `rank,biotype,mane,canonical,appris,tsl,ccds,length,ensembl,refseq` # recommended by RADIANT
 
 ### Source-specific inputs
@@ -116,3 +115,9 @@ For each input, the sub-bullet refers to when to use the suggested input
 ## Workflow outputs
  - `annotated_protected`: `PASS` VCF with annotation pipeline soft `FILTER`-added values, VCF index, and MAF format of VCF
  - `annotated_public_vcf`: Same as `annotated_protected`, hard-filtered to include `PASS` only
+
+## Appendix
+Using defaults, VEP flags/command will appear as follows:
+```sh
+perl /opt/vep/src/ensembl-vep/vep
+```
