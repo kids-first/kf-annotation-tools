@@ -122,6 +122,58 @@ doc: |
   - `annotated_protected`: `PASS` VCF with annotation pipeline soft `FILTER`-added values, VCF index, and MAF format of VCF
   - `annotated_public_vcf`: Same as `annotated_protected`, hard-filtered to include `PASS` only
 
+  ## Appendix
+  Using defaults, VEP flags/command will appear as follows:
+  ```sh
+      /opt/vep/src/ensembl-vep/vep
+        --af_1kg
+        --af_esp
+        --af_gnomad   
+        --allele_number
+        --allow_non_variant
+        --appris
+        --assembly GRCh38
+        --buffer_size 5000
+        --cache
+        --canonical
+        --ccds
+        --check_existing
+        --compress_output bgzip
+        --dir_cache . 
+        --domains
+        --dont_skip
+        --failed 1
+        --fasta /path/to/reference.ext
+        --flag_pick
+        --fork 16
+        --format vcf
+        --gene_phenotype
+        --hgvs
+        --hgvsg
+        --input_file /path/to/output_basename-string-value.tool_name-string-value.vep_annotated.vcf.gz
+        --mane
+        --merged
+        --no_escape
+        --no_stats
+        --numbers
+        --offline
+        --output_file /path-to/output.vcf.gz
+        --polyphen b
+        --pubmed
+        --regulatory
+        --shift_hgvs 1
+        --sift b
+        --species homo_sapiens
+        --symbol
+        --total_length
+        --tsl
+        --uniprot
+        --variant_class
+        --vcf
+        --warning_file output_basename-string-value_warnings.tool_name-string-value.txt
+        --xref_refseq
+  ```
+
 requirements:
 - class: ScatterFeatureRequirement
 - class: MultipleInputFeatureRequirement
@@ -150,10 +202,10 @@ inputs:
       for clues"}
   vep_ram: {type: 'int?', default: 32, doc: "In GB, may need to increase this value depending on the size/complexity of input"}
   vep_cores: {type: 'int?', default: 16, doc: "Number of cores to use. May need to increase for really large inputs"}
-  vep_buffer_size: {type: 'int?', default: 1000, doc: "Increase or decrease to balance speed and memory usage"}
+  vep_buffer_size: {type: 'int?', default: 5000, doc: "Increase or decrease to balance speed and memory usage"}
   vep_cache: {type: 'File?', doc: "tar gzipped cache from ensembl/local converted cache", "sbg:suggestedValue": {class: File, path: 6332f8e47535110eb79c794f,
       name: homo_sapiens_merged_vep_105_indexed_GRCh38.tar.gz}}
-  vep_extra_args: { type: 'string?', doc: "Extra arguments for VEP", default: "--mane --mane_select" }
+  vep_extra_args: { type: 'string?', doc: "Extra arguments for VEP" }
   vep_pick_order: { type: 'string?', doc: "PICK order to flag representative transcript. RADIANT preference is default", default: "rank,biotype,mane,canonical,appris,tsl,ccds,length,ensembl,refseq" }
   merged: {type: 'boolean?', doc: "Set to true if merged cache used", default: true}
   run_cache_existing: {type: 'boolean?', doc: "Run the check_existing flag for cache", default: true}
@@ -228,7 +280,7 @@ steps:
     in:
       reference: indexed_reference_fasta
       disable_annotation: disable_vep_annotation
-      cores: vep_cores
+      fork: vep_cores
       ram: vep_ram
       buffer_size: vep_buffer_size
       input_vcf:
@@ -236,6 +288,10 @@ steps:
           prefilter_vcf/filtered_vcf, input_vcf]
         pickValue: first_non_null
       output_basename: output_basename
+      output_file:
+        source: [output_basename, tool_name]
+        valueFrom: |
+          $(self[0]).$(self[1]).vep_annotated.vcf.gz
       tool_name: tool_name
       cache: vep_cache
       merged: merged
