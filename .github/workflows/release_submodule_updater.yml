@@ -32,13 +32,6 @@ jobs:
         repository: kids-first/kf-tumor-workflow
         path: tumor-only
         submodules: true
-    - id: checkout-germline
-      name: Checkout Germline Repo
-      uses: actions/checkout@v4
-      with:
-        repository: kids-first/kf-germline-workflow
-        path: germline
-        submodules: true
     - id: checkout-jg
       name: Checkout Joint Genotyping Repo
       uses: actions/checkout@v4
@@ -46,28 +39,11 @@ jobs:
         repository: kids-first/kf-jointgenotyping-workflow
         path: joint-genotyping
         submodules: true
-    - id: get-germline-annot-version
-      name: Get Germline Annotation Workflow Version
-      run: |
-        GVERSION=$(yq '."sbg:links" | .[] | select(.label == "github-release") | .id | split("/") | .[-1]' ./annotation/workflows/kfdrc-germline-snv-annot-workflow.cwl)
-        echo "GERMLINE_VERSION=$GVERSION" >> "$GITHUB_ENV"
     - id: get-somatic-annot-version
       name: Get Somatic Annotation Workflow Version
       run: |
         SVERSION=$(yq '."sbg:links" | .[] | select(.label == "github-release") | .id | split("/") | .[-1]' ./annotation/workflows/kfdrc-somatic-snv-annot-workflow.cwl)
         echo "SOMATIC_VERSION=$SVERSION" >> "$GITHUB_ENV"
-    - id: update-germline-submodules
-      name: Update Germline Submodules
-      if: ${{ env.GERMLINE_VERSION == github.ref_name }}
-      run: |
-        cd germline
-        git submodule update --remote --recursive kf-annotation-tools
-        cd kf-annotation-tools
-        git checkout $GITHUB_REF_NAME
-        cd ../../joint-genotyping
-        git submodule update --remote --recursive kf-annotation-tools
-        cd kf-annotation-tools
-        git checkout $GITHUB_REF_NAME
     - id: update-somatic-submodules
       name: Update Somatic Submodules
       if: ${{ env.SOMATIC_VERSION == github.ref_name }}
@@ -80,22 +56,6 @@ jobs:
         git submodule update --remote --recursive kf-annotation-tools
         cd kf-annotation-tools
         git checkout $GITHUB_REF_NAME
-    - id: cpr-germline
-      if: ${{ env.GERMLINE_VERSION == github.ref_name }}
-      name: Germline PR
-      uses: peter-evans/create-pull-request@v5
-      with:
-        token: ${{ secrets.MIGBRO_GHA_PAT }}
-        path: ./germline
-        commit-message: ":robot: update annotation submodule"
-        title: ":robot: Update Annotation Submodule for Release ${{ github.ref_name }}"
-        body: |
-          Automated changes by [create-pull-request](https://github.com/peter-evans/create-pull-request) GitHub action.
-
-          Updates the annotation submodule in this repository for release ${{ github.ref_name }}
-        delete-branch: true
-        branch: annotation-submodule-to-${{ github.ref_name }}
-        labels: bix-dev
     - id: cpr-joint-genotyping
       if: ${{ env.GERMLINE_VERSION == github.ref_name }}
       name: Joint Genotyping PR
