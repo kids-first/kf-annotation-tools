@@ -122,6 +122,58 @@ doc: |
   - `annotated_protected`: `PASS` VCF with annotation pipeline soft `FILTER`-added values, VCF index, and MAF format of VCF
   - `annotated_public_vcf`: Same as `annotated_protected`, hard-filtered to include `PASS` only
 
+  ## Appendix
+  Using defaults, VEP flags/command will appear as follows:
+  ```sh
+      /opt/vep/src/ensembl-vep/vep
+        --af_1kg
+        --af_esp
+        --af_gnomad   
+        --allele_number
+        --allow_non_variant
+        --appris
+        --assembly GRCh38
+        --buffer_size 5000
+        --cache
+        --canonical
+        --ccds
+        --check_existing
+        --compress_output bgzip
+        --dir_cache . 
+        --domains
+        --dont_skip
+        --failed 1
+        --fasta /path/to/reference.ext
+        --flag_pick
+        --fork 16
+        --format vcf
+        --gene_phenotype
+        --hgvs
+        --hgvsg
+        --input_file /path/to/output_basename-string-value.tool_name-string-value.vep_annotated.vcf.gz
+        --mane
+        --merged
+        --no_escape
+        --no_stats
+        --numbers
+        --offline
+        --output_file /path-to/output.vcf.gz
+        --polyphen b
+        --pubmed
+        --regulatory
+        --shift_hgvs 1
+        --sift b
+        --species homo_sapiens
+        --symbol
+        --total_length
+        --tsl
+        --uniprot
+        --variant_class
+        --vcf
+        --warning_file output_basename-string-value_warnings.tool_name-string-value.txt
+        --xref_refseq
+  ```
+
 requirements:
 - class: ScatterFeatureRequirement
 - class: MultipleInputFeatureRequirement
@@ -228,7 +280,7 @@ steps:
     in:
       reference: indexed_reference_fasta
       disable_annotation: disable_vep_annotation
-      cores: vep_cores
+      fork: vep_cores
       ram: vep_ram
       buffer_size: vep_buffer_size
       input_vcf:

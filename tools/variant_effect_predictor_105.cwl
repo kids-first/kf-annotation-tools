@@ -47,35 +47,53 @@ doc: |
       --PLUGINS LoF,ExAC,gnomADc,CADD,dbNSFP,dbscSNV &&
     tar -xzf /path/to/cache.ext &&
     /opt/vep/src/ensembl-vep/vep
-      --input_file /path/to/input_vcf.ext
-      --output_file STDOUT
-      --stats_file output_basename-string-value_stats.tool_name-string-value.html
-      --warning_file output_basename-string-value_warnings.tool_name-string-value.txt
-      --vcf
-      --offline
-      --fork $(inputs.cores)
-      --ccds
-      --uniprot
-      --symbol
-      --numbers
-      --canonical
-      --protein
-      --assembly GRCh38
-      --dir_cache $PWD
-      --cache
-      --merged
-      --check_existing
       --af_1kg
       --af_esp
-      --af_gnomad
-      --hgvs
+      --af_gnomad   
+      --allele_number
+      --allow_non_variant
+      --appris
+      --assembly GRCh38
+      --buffer_size 5000
+      --cache
+      --canonical
+      --ccds
+      --check_existing
+      --compress_output bgzip
+      --dir_cache . 
+      --domains
+      --dont_skip
+      --failed 1
       --fasta /path/to/reference.ext
-      --plugin CADD,/path/to/cadd_snvs.ext,/path/to/cadd_indels.ext
-      --plugin dbNSFP,/path/to/dbnsfp.ext,ALL
-      --plugin dbscSNV,/path/to/dbscsnv.ext
-      --custom /path/to/phylop.ext,PhyloP,bigwig |
-    bgzip -c > output_basename-string-value.tool_name-string-value.vep.vcf.gz &&
-    tabix output_basename-string-value.tool_name-string-value.vep.vcf.gz
+      --flag_pick
+      --fork 16
+      --format vcf
+      --gene_phenotype
+      --hgvs
+      --hgvsg
+      --input_file /path/to/output_basename-string-value.tool_name-string-value.vep_annotated.vcf.gz
+      --mane
+      --merged
+      --no_escape
+      --no_stats
+      --numbers
+      --offline
+      --output_file /path-to/output.vcf.gz
+      --polyphen b
+      --pubmed
+      --regulatory
+      --shift_hgvs 1
+      --sift b
+      --species homo_sapiens
+      --symbol
+      --total_length
+      --tsl
+      --uniprot
+      --variant_class
+      --vcf
+      --warning_file output_basename-string-value_warnings.tool_name-string-value.txt
+      --xref_refseq
+    && tabix output_basename-string-value.tool_name-string-value.vep_annotated.vcf.gz
 
 requirements:
   - class: ShellCommandRequirement
