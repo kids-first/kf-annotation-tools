@@ -225,6 +225,9 @@ inputs:
   maf_center: {type: 'string?', doc: "Sequencing center of variant called", default: "."}
   custom_enst: {type: 'File?', doc: "Use a file with ens tx IDs for each gene to override VEP PICK", "sbg:suggestedValue": {class: File,
       path: 663d2bcc27374715fccd8c65, name: kf_isoform_override.tsv}}
+  vcf_tumor_id: { type: 'string?',  doc: "If VCF tumor ID different than desired output normal ID, input here" }
+  vcf_normal_id: { type: 'string?', doc: "If VCF normal ID different than desired output normal ID, input here" }
+  
 outputs:
   annotated_protected: {type: 'File[]', outputSource: rename_protected/renamed_files}
   annotated_public: {type: 'File[]', outputSource: rename_public/renamed_files}
@@ -355,6 +358,8 @@ steps:
       retain_ann: retain_ann
       maf_center: maf_center
       custom_enst: custom_enst
+      vcf_tumor_id: vcf_tumor_id
+      vcf_normal_id: vcf_normal_id
     out: [output_maf]
   hard_filter_vcf:
     run: ../tools/bcftools_filter_vcf.cwl
@@ -379,6 +384,8 @@ steps:
       retain_ann: retain_ann
       maf_center: maf_center
       custom_enst: custom_enst
+      vcf_tumor_id: vcf_tumor_id
+      vcf_normal_id: vcf_normal_id
     out: [output_maf]
   rename_protected:
     run: ../tools/generic_rename_outputs.cwl

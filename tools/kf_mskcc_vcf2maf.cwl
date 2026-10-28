@@ -33,6 +33,10 @@ inputs:
   output_basename: string
   tumor_id: { type: string, inputBinding: {position: 3, prefix: "--tumor-id"} }
   normal_id: { type: string, inputBinding: {position: 4, prefix: "--normal-id"} }
+  vcf_tumor_id: { type: 'string?', inputBinding: { position: 4, prefix: "--vcf-tumor-id"},
+    doc: "If VCF tumor ID different than desired output normal ID, input here" }
+  vcf_normal_id: { type: 'string?', inputBinding: { position: 4, prefix: "--vcf-normal-id"},
+    doc: "If VCF normal ID different than desired output normal ID, input here" }
   tool_name: string
   ref_build: { type: 'string?', doc: "Genome ref build used, should line up with cache.", default: "GRCh38",
     inputBinding: {position: 5, prefix: "--ncbi-build"} }
