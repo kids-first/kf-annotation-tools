@@ -100,7 +100,7 @@ requirements:
   - class: InlineJavascriptRequirement
   - class: ResourceRequirement
     ramMin: ${return inputs.ram * 1000}
-    coresMin: $(inputs.cores)
+    coresMin: $(inputs.fork)
   - class: DockerRequirement
     dockerPull: 'ensemblorg/ensembl-vep:release_105.0'
 baseCommand: ["/bin/bash", "-c"]

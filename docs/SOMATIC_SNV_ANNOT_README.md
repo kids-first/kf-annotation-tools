@@ -111,6 +111,10 @@ For each input, the sub-bullet refers to when to use the suggested input
    - DGD nexus export: `8`
    - Otherwise: `32`
  - `vep_buffer`: `5000`
+ - `input_tumor_name` # used for populating Tumor_Sample_Barcode in MAF file and finding info form FORMAT field in VCF
+ - `input_normal_name` # used for populating Matched_Norm_Sample_Barcode in MAF file and finding info form FORMAT field in VCF
+ - `vcf_tumor_id` # string if ID for tumor in VCF different than `input_tumor_name`, which is used for populating Tumor_Sample_Barcode in MAF file
+ - `vcf_normal_id` # string if ID for normal in VCF different than `input_normal_name`, which is used for populating Matched_Norm_Sample_Barcode in MAF file
 
 ## Workflow outputs
  - `annotated_protected`: `PASS` VCF with annotation pipeline soft `FILTER`-added values, VCF index, and MAF format of VCF
