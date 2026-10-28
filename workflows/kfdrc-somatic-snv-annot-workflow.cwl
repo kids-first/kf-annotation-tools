@@ -59,7 +59,6 @@ doc: |
   - `protein_snv_hotspots`: `kfdrc_protein_snv_cancer_hotspots_20240718.txt` #  Column-name-containing, tab-delimited file(s) containing protein names and amino acid positions corresponding to hotspots. File header contains generation history
   - `protein_indel_hotspots`: `protein_indel_cancer_hotspots_v2.ENS105_liftover.tsv` # A tsv formatted INDEL subset of https://www.cancerhotspots.org/files/hotspots_v2.xls
   - `custom_enst`: `kf_isoform_override.tsv` # As of VEP 104, several genes have had their canonical transcripts redefined. While the VCF will have all possible isoforms, this affects maf file output and may results in representative protein changes that defy historical expectations
-  - `vep_extra_args`: `--mane --mane_select` # allow for added args for VEP. Recommended ading MANE annotation
   - `vep_pick_order`: `rank,biotype,mane,canonical,appris,tsl,ccds,length,ensembl,refseq` # recommended by RADIANT
 
   ### Source-specific inputs
@@ -117,6 +116,10 @@ doc: |
     - DGD nexus export: `8`
     - Otherwise: `32`
   - `vep_buffer`: `5000`
+  - `input_tumor_name` # used for populating Tumor_Sample_Barcode in MAF file and finding info form FORMAT field in VCF
+  - `input_normal_name` # used for populating Matched_Norm_Sample_Barcode in MAF file and finding info form FORMAT field in VCF
+  - `vcf_tumor_id` # string if ID for tumor in VCF different than `input_tumor_name`, which is used for populating Tumor_Sample_Barcode in MAF file
+  - `vcf_normal_id` # string if ID for normal in VCF different than `input_normal_name`, which is used for populating Matched_Norm_Sample_Barcode in MAF file
 
   ## Workflow outputs
   - `annotated_protected`: `PASS` VCF with annotation pipeline soft `FILTER`-added values, VCF index, and MAF format of VCF
@@ -432,5 +435,5 @@ $namespaces:
 "sbg:license": Apache License 2.0
 "sbg:publisher": KFDRC
 "sbg:links":
-- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.4.0'
+- id: 'https://github.com/kids-first/kf-annotation-tools/releases/tag/v1.4.1'
   label: github-release
